@@ -127,7 +127,7 @@ class Migration(migrations.Migration):
                         violation_error_message="Uzávěrka nemůže být po začátku.",
                     ),
                     models.CheckConstraint(
-                        condition=models.Q(("kind", "zkouska"), ("is_public", True), _negated=True),
+                        condition=models.Q(("is_public", True), ("kind", "zkouska"), _negated=True),
                         name="events_event_rehearsal_not_public",
                         violation_error_message="Zkoušku nelze zveřejnit na veřejném webu.",
                     ),
