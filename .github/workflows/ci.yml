@@ -25,7 +25,7 @@ jobs:
     name: Lock file is present and current
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v6
         with:
           version: ${{ env.UV_VERSION }}
@@ -48,7 +48,7 @@ jobs:
     needs: lock
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v6
         with:
           version: ${{ env.UV_VERSION }}
@@ -83,7 +83,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://ci:ci-only-password@localhost:5432/ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v6
         with:
           version: ${{ env.UV_VERSION }}
@@ -155,7 +155,7 @@ jobs:
       # pytest-django's live_server runs inside Playwright's sync event loop thread.
       DJANGO_ALLOW_ASYNC_UNSAFE: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v6
         with:
           version: ${{ env.UV_VERSION }}
@@ -169,7 +169,7 @@ jobs:
     needs: lock
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate compose.yaml
         run: |
           cp .env.example .env
