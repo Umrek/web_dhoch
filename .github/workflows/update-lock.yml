@@ -28,7 +28,7 @@ jobs:
           uv run python -c "import sys, django; assert sys.version_info[:2] == (3, 12); assert django.VERSION[:2] == (5, 2); print(sys.version, django.get_version())"
       - name: Dependency summary (for review)
         run: uv tree --frozen --depth 1 >> "$GITHUB_STEP_SUMMARY"
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@v8
         with:
           branch: chore/update-uv-lock
           delete-branch: true
