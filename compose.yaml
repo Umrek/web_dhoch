@@ -1,0 +1,77 @@
+# Production-like stack for staging or a single-host deployment.
+# TLS is terminated by a reverse proxy in front of "web" (see deploy/nginx/*.example).
+# Usage:  cp .env.example .env  # then edit; docker compose up --build
+
+name: oderske-chasy
+
+x-app-env: &app-env
+  SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY (>= 50 random chars)}
+  ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost}
+  CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:?set https origins}
+  SITE_URL: ${SITE_URL:?set the canonical https URL}
+  DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+  EMAIL_HOST: ${EMAIL_HOST:?set SMTP host}
+  EMAIL_PORT: ${EMAIL_PORT:-587}
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+  EMAIL_USE_TLS: ${EMAIL_USE_TLS:-true}
+  DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:?}
+  ADMIN_CONTACT_EMAIL: ${ADMIN_CONTACT_EMAIL:?}
+  PRIVACY_CONTACT_EMAIL: ${PRIVACY_CONTACT_EMAIL:?}
+  SECURITY_CONTACT_EMAIL: ${SECURITY_CONTACT_EMAIL:-}
+  CONTACT_RECIPIENT_EMAIL: ${CONTACT_RECIPIENT_EMAIL:?}
+  ADMIN_URL: ${ADMIN_URL:-admin/}
+  TRUST_PROXY_SSL_HEADER: ${TRUST_PROXY_SSL_HEADER:-true}
+  PROXY_COUNT: ${PROXY_COUNT:-1}
+  HSTS_SECONDS: ${HSTS_SECONDS:-3600}
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    security_opt: ["no-new-privileges:true"]
+
+  migrate:
+    build: .
+    image: oderske-chasy:local
+    command: ["sh", "-c", "python manage.py migrate --noinput && python manage.py createcachetable && python manage.py sync_roles"]
+    environment: *app-env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+
+  web:
+    image: oderske-chasy:local
+    restart: unless-stopped
+    environment: *app-env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8000:8000"   # only the local reverse proxy may reach the app
+    volumes:
+      - gallery_data:/data/gallery
+      - sheet_music_data:/data/sheet_music
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+
+volumes:
+  db_data:
+  gallery_data:
+  sheet_music_data:

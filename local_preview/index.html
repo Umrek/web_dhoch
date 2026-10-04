@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!-- Static local preview only. Not used by the production Django application. Does not validate backend functionality. -->
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dechová hudba Oderské chasy (náhled)</title>
+  <meta name="description" content="Dechová hudba Oderské chasy – koncerty, zábavy a slavnosti.">
+  <link rel="stylesheet" href="../src/static/css/tokens.css">
+  <link rel="stylesheet" href="../src/static/css/base.css">
+  <link rel="stylesheet" href="../src/static/css/layout.css">
+  <link rel="stylesheet" href="../src/static/css/components.css">
+  <link rel="stylesheet" href="../src/static/css/portal.css">
+  <link rel="stylesheet" href="assets/css/preview.css">
+  <link rel="icon" href="../src/static/img/favicon.svg" type="image/svg+xml">
+  <script src="../src/static/js/menu.js" defer></script>
+  <script src="assets/js/preview.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+  <p class="preview-banner" role="note"><strong>Lokální náhled vzhledu.</strong> Nejde o běžící aplikaci, data jsou smyšlená a formuláře nic neodesílají.</p>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="wordmark" href="index.html">
+        <span class="wordmark-top">Dechová hudba</span>
+        <span class="wordmark-main">Oderské chasy</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="index.html" aria-current="page">Domů</a></li>
+          <li><a href="about.html">O kapele</a></li>
+          <li><a href="events.html">Akce</a></li>
+          <li><a href="gallery.html">Galerie</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
+          <li><a href="login.html">Přihlášení</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" tabindex="-1">
+<section class="hero">
+  <div class="container hero-inner">
+    <p class="eyebrow">Dechová hudba z Oder</p>
+    <h1>Hrajeme s chutí na Oderských slavnostech i u vás</h1>
+    <p class="lead">Tradiční dechovka, polky a valčíky pro náměstí, sály i zahrady.</p>
+    <p class="hero-actions">
+      <a class="button" href="events.html">Nadcházející akce</a>
+      <a class="button button-secondary" href="contact.html">Pozvěte nás zahrát</a>
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow prose">
+    <h2>Kdo jsme</h2>
+    <p>Jsme sdružení muzikantů z Oder a okolí. Text úvodu je ukázkový. [Doplní provozovatel]</p>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="home-events">
+  <div class="container">
+    <h2 id="home-events">Nadcházející akce</h2>
+    <ul class="card-grid">
+<li><article class="card">
+  <p class="card-date"><time datetime="2026-10-17T15:00">17. 10. 2026, 15:00</time></p>
+  <h3><a href="event-detail.html">Posvícenský koncert</a></h3>
+  <p>Náměstí, Odry</p>
+</article></li>
+<li><article class="card">
+  <p class="card-date"><time datetime="2026-11-07T19:00">7. 11. 2026, 19:00</time></p>
+  <h3><a href="event-detail.html">Martinská zábava</a></h3>
+  <p>Kulturní dům, Odry</p>
+</article></li>
+<li><article class="card">
+  <p class="card-date"><time datetime="2026-11-21T14:00">21. 11. 2026, 14:00</time></p>
+  <h3><a href="event-detail.html">Koncert pro seniory</a></h3>
+  <p>Sál v Loučkách</p>
+  <p class="badge badge-cancelled">Zrušeno</p>
+</article></li>
+    </ul>
+    <p><a href="events.html">Všechny akce</a></p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="home-gallery">
+  <div class="container">
+    <h2 id="home-gallery">Z fotogalerie</h2>
+    <ul class="thumb-grid">
+      <li><a href="gallery-detail.html"><img src="assets/images/album-1.svg" alt="Kapela hraje na náměstí, v popředí křídlovky" width="400" height="300" loading="lazy"></a></li>
+      <li><a href="gallery-detail.html"><img src="assets/images/album-2.svg" alt="Tubista ladí nástroj před koncertem" width="400" height="300" loading="lazy"></a></li>
+      <li><a href="gallery-detail.html"><img src="assets/images/album-3.svg" alt="Posluchači tančí pod pódiem" width="400" height="300" loading="lazy"></a></li>
+      <li><a href="gallery-detail.html"><img src="assets/images/album-4.svg" alt="Celá kapela v krojích při společném foto" width="400" height="300" loading="lazy"></a></li>
+    </ul>
+    <p><a href="gallery.html">Celá galerie</a></p>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="home-contact">
+  <div class="container narrow prose">
+    <h2 id="home-contact">Chcete nás pozvat?</h2>
+    <p>Napište nám termín a místo, ozveme se.</p>
+    <p><a class="button" href="contact.html">Napsat kapele</a></p>
+  </div>
+</section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-title">Dechová hudba Oderské chasy</p>
+        <p>Dechová hudba z Oder a okolí.</p>
+      </div>
+      <nav aria-label="Právní informace">
+        <ul class="footer-links">
+          <li><a href="privacy.html">Ochrana osobních údajů</a></li>
+          <li><a href="cookies.html">Cookies</a></li>
+          <li><a href="accessibility.html">Prohlášení o přístupnosti</a></li>
+          <li><a href="403.html">Ukázka: 403</a></li>
+          <li><a href="404.html">Ukázka: 404</a></li>
+          <li><a href="500.html">Ukázka: 500</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

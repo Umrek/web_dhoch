@@ -1,0 +1,9 @@
+{% if page.paginator.num_pages > 1 %}
+<nav class="pagination" aria-label="Stránkování">
+  <ul>
+    {% if page.has_previous %}<li><a href="?{% if extra %}{{ extra }}&amp;{% endif %}strana={{ page.previous_page_number }}" rel="prev">Předchozí</a></li>{% endif %}
+    <li><span aria-current="page">Strana {{ page.number }} z {{ page.paginator.num_pages }}</span></li>
+    {% if page.has_next %}<li><a href="?{% if extra %}{{ extra }}&amp;{% endif %}strana={{ page.next_page_number }}" rel="next">Další</a></li>{% endif %}
+  </ul>
+</nav>
+{% endif %}

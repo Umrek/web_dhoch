@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <p class="eyebrow">Dechová hudba z Oder</p>
+    <h1>{{ hero.title }}</h1>
+    {% if hero.intro %}<p class="lead">{{ hero.intro }}</p>{% endif %}
+    {% for paragraph in hero.body.splitlines %}{% if paragraph %}<p>{{ paragraph }}</p>{% endif %}{% endfor %}
+    <p class="hero-actions">
+      <a class="button" href="{% url 'events:list' %}">Nadcházející akce</a>
+      <a class="button button-secondary" href="{% url 'contact:form' %}">Pozvěte nás zahrát</a>
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow prose">
+    <h2>{{ intro.title }}</h2>
+    {% for paragraph in intro.body.splitlines %}{% if paragraph %}<p>{{ paragraph }}</p>{% endif %}{% endfor %}
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="home-events">
+  <div class="container">
+    <h2 id="home-events">Nadcházející akce</h2>
+    {% if upcoming_events %}
+      <ul class="card-grid">
+        {% for event in upcoming_events %}
+          <li>{% include "events/_card.html" %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aktuálně nemáme zveřejněné žádné akce. Sledujte nás prosím, termíny doplňujeme průběžně.</p>
+    {% endif %}
+    <p><a href="{% url 'events:list' %}">Všechny akce</a></p>
+  </div>
+</section>
+
+{% if gallery_preview %}
+<section class="section" aria-labelledby="home-gallery">
+  <div class="container">
+    <h2 id="home-gallery">Z fotogalerie</h2>
+    <ul class="thumb-grid">
+      {% for image in gallery_preview %}
+        <li>
+          <a href="{{ image.album.get_absolute_url }}">
+            <img src="{% url 'gallery:image' image.pk 'nahled' %}" alt="{{ image.alt_text }}" width="{{ image.width }}" height="{{ image.height }}" loading="lazy">
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <p><a href="{% url 'gallery:list' %}">Celá galerie</a></p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

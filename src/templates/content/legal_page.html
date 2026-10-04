@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>{{ page.title }}</h1>
+  {% if page.needs_legal_review %}
+    <p class="notice" role="note"><strong>Upozornění:</strong> Tento text je zatím pracovní a nebyl právně zkontrolován. [Doplní provozovatel]</p>
+  {% endif %}
+  {% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}
+  {% for paragraph in page.body.splitlines %}{% if paragraph %}<p>{{ paragraph }}</p>{% endif %}{% endfor %}
+  {% if page.key == "provozovatel" %}
+    <dl class="facts">
+      <dt>Provozovatel</dt><dd>{{ site_settings.operator_name|default:"[Doplní provozovatel]" }}</dd>
+      <dt>Údaje</dt><dd>{{ site_settings.operator_details|default:"[Doplní provozovatel]"|linebreaksbr }}</dd>
+      <dt>E-mail</dt><dd>{{ site_settings.contact_email|default:"[Doplní provozovatel]" }}</dd>
+    </dl>
+  {% endif %}
+  <p>Dotazy k ochraně osobních údajů: {{ PRIVACY_CONTACT_EMAIL }}</p>
+</div>
+{% endblock %}

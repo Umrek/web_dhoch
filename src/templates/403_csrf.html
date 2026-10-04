@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Platnost formuláře vypršela | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>Platnost formuláře vypršela</h1>
+  <p>Bezpečnostní ověření formuláře se nezdařilo. Načtěte prosím předchozí stránku znovu a akci opakujte. Zkontrolujte také, že máte v prohlížeči povolené cookies pro tento web.</p>
+  <p><a href="{% url 'content:home' %}">Zpět na úvodní stránku</a></p>
+</div>
+{% endblock %}

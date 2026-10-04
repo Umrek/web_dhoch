@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ album.title }} | {% endblock %}
+{% block content %}
+<div class="container">
+  <h1>{{ album.title }}</h1>
+  {% if album.description %}<p class="lead">{{ album.description }}</p>{% endif %}
+  <ul class="thumb-grid">
+    {% for image in album.visible_images %}
+      <li>
+        <figure>
+          <a href="{% url 'gallery:image' image.pk 'plny' %}">
+            <img src="{% url 'gallery:image' image.pk 'nahled' %}" alt="{{ image.alt_text }}" width="{{ image.width }}" height="{{ image.height }}" loading="lazy">
+          </a>
+          {% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}
+        </figure>
+      </li>
+    {% endfor %}
+  </ul>
+  <p><a href="{% url 'gallery:list' %}">Zpět do galerie</a> · <a href="{% url 'content:legal' 'odstraneni-fotografie' %}">Odstranění fotografie</a></p>
+</div>
+{% endblock %}

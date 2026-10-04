@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Kontakt | {% endblock %}
+{% block content %}
+<div class="container narrow">
+  <h1>Kontakt</h1>
+  <p>Chcete nás pozvat zahrát nebo se na něco zeptat? Napište nám. Údaje použijeme jen pro odpověď a po {{ CONTACT_RETENTION_DAYS }} dnech je smažeme (viz <a href="{% url 'content:legal' 'ochrana-osobnich-udaju' %}">ochrana osobních údajů</a>).</p>
+  {% if rate_limited %}<p class="message message-error" role="alert">Odeslali jste příliš mnoho zpráv. Zkuste to prosím později.</p>{% endif %}
+  <form method="post" novalidate class="form">
+    {% csrf_token %}
+    {% include "partials/form.html" with submit="Odeslat zprávu" %}
+  </form>
+</div>
+{% endblock %}

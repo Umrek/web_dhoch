@@ -1,0 +1,30 @@
+{% extends "portal_base.html" %}
+{% block title %}Přehled docházky | {% endblock %}
+{% block portal %}
+<h1>Docházka: {{ event.title }}</h1>
+<p>{{ event.starts_at|date:"j. n. Y, H:i" }}</p>
+<h2>Souhrn</h2>
+<ul class="plain-list">
+  <li>Přijdou: {{ overview.counts.ano }}</li>
+  <li>Nepřijdou: {{ overview.counts.ne }}</li>
+  <li>Zatím nevědí: {{ overview.counts.mozna }}</li>
+  <li>Bez odpovědi: {{ overview.missing|length }}</li>
+</ul>
+<h2>Odpovědi</h2>
+<table class="table">
+  <caption class="visually-hidden">Odpovědi muzikantů</caption>
+  <thead><tr><th scope="col">Jméno</th><th scope="col">Sekce</th><th scope="col">Odpověď</th><th scope="col">Poznámka</th></tr></thead>
+  <tbody>
+    {% for row in overview.rows %}
+      <tr><th scope="row">{{ row.name }}</th><td>{{ row.section }}</td><td>{{ row.status }}</td><td>{{ row.note }}</td></tr>
+    {% empty %}
+      <tr><td colspan="4">Zatím nikdo neodpověděl.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if overview.missing %}
+  <h2>Bez odpovědi</h2>
+  <ul>{% for name in overview.missing %}<li>{{ name }}</li>{% endfor %}</ul>
+{% endif %}
+<p><a href="{% url 'attendance:detail' event.slug %}">Zpět na akci</a></p>
+{% endblock %}

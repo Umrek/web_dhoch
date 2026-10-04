@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Chyba 400 | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>Požadavek se nepodařilo zpracovat</h1>
+  <p>Odeslaná data nejsou platná. Vraťte se prosím zpět a zkuste to znovu.</p>
+  <p><a href="{% url 'content:home' %}">Zpět na úvodní stránku</a></p>
+</div>
+{% endblock %}

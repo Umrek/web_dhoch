@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Akce | {% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Nadcházející akce</h1>
+  {% if has_events %}
+    {% for month, events in month_groups %}
+      <section aria-labelledby="m-{{ month|date:'Y-m' }}">
+        <h2 id="m-{{ month|date:'Y-m' }}">{{ month|date:"F Y" }}</h2>
+        <ul class="card-grid">
+          {% for event in events %}<li>{% include "events/_card.html" %}</li>{% endfor %}
+        </ul>
+      </section>
+    {% endfor %}
+  {% else %}
+    <p>Aktuálně nemáme zveřejněné žádné akce. Termíny doplňujeme průběžně.</p>
+  {% endif %}
+  <p><a href="{% url 'events:archive' %}">Archiv proběhlých akcí</a></p>
+</div>
+{% endblock %}

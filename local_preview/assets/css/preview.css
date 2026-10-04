@@ -1,0 +1,49 @@
+/*
+ * Static local preview only.
+ * Not used by the production Django application.
+ * Does not validate backend functionality.
+ *
+ * Minimal additions on top of the production CSS in src/static/css (loaded first).
+ * Only preview-specific chrome lives here: the preview banner, the state switcher
+ * and attendance status labels used in the visual examples.
+ */
+.preview-banner {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: #fff4cc;
+  color: #3d2e00;
+  border-bottom: 2px solid #8a6d00;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.preview-states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border: 2px dashed #8a6d00;
+  background: #fffbea;
+}
+
+.preview-states p { margin: 0 0.5rem 0 0; align-self: center; }
+
+.preview-states button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.2em; }
+
+.preview-state-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5c4700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 0.25rem; font-weight: 600; border: 1px solid currentColor; }
+.status-ano { color: #14532d; background: #e7f6ec; }
+.status-ne { color: #7f1d1d; background: #fdecec; }
+.status-mozna { color: #5c4700; background: #fff4cc; }
+.status-none { color: #374151; background: #f3f4f6; }
+
+.preview-figure img { width: 100%; height: auto; display: block; }
+.preview-figure figcaption { font-size: 0.95rem; margin-top: 0.25rem; }

@@ -1,0 +1,36 @@
+{% extends "portal_base.html" %}
+{% block title %}Portál | {% endblock %}
+{% block portal %}
+<h1>Vítejte{% if profile %}, {{ profile.display_name }}{% endif %}</h1>
+{% if not profile %}<p class="notice" role="note">Váš profil muzikanta zatím nebyl vytvořen. Obraťte se na správce.</p>{% endif %}
+
+{% if announcements %}
+<section aria-labelledby="ann">
+  <h2 id="ann">Oznámení</h2>
+  {% for a in announcements %}
+    <article class="card">
+      <h3>{{ a.title }}</h3>
+      {{ a.body|linebreaks }}
+    </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section aria-labelledby="reh">
+  <h2 id="reh">Nejbližší zkoušky</h2>
+  {% for event in rehearsals %}
+    {% if forloop.first %}<ul class="plain-list">{% endif %}
+    <li><a href="{% url 'attendance:detail' event.slug %}">{{ event.title }}</a> – {{ event.starts_at|date:"j. n. Y, H:i" }}</li>
+    {% if forloop.last %}</ul>{% endif %}
+  {% empty %}<p>Žádné naplánované zkoušky.</p>{% endfor %}
+</section>
+
+<section aria-labelledby="con">
+  <h2 id="con">Nejbližší koncerty</h2>
+  {% for event in concerts %}
+    {% if forloop.first %}<ul class="plain-list">{% endif %}
+    <li><a href="{% url 'attendance:detail' event.slug %}">{{ event.title }}</a> – {{ event.starts_at|date:"j. n. Y, H:i" }}</li>
+    {% if forloop.last %}</ul>{% endif %}
+  {% empty %}<p>Žádné naplánované koncerty.</p>{% endfor %}
+</section>
+{% endblock %}

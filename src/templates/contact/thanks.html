@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Děkujeme | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>Děkujeme za zprávu</h1>
+  <p>Ozveme se Vám co nejdříve.</p>
+  <p><a href="{% url 'content:home' %}">Zpět na úvodní stránku</a></p>
+</div>
+{% endblock %}

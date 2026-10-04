@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+{% load admin_urls %}
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  <p>{{ description }}</p>
+  <ul>
+    {% for obj in objects %}<li>{{ obj }}</li>{% endfor %}
+  </ul>
+  {% for pk in selected %}<input type="hidden" name="{{ action_checkbox_name }}" value="{{ pk }}">{% endfor %}
+  <input type="hidden" name="action" value="{{ action_name }}">
+  <input type="hidden" name="confirm" value="yes">
+  <input type="submit" value="Potvrdit">
+  <a href="{% url opts|admin_urlname:'changelist' %}" class="button cancel-link">Zrušit</a>
+</form>
+{% endblock %}

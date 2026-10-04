@@ -1,0 +1,226 @@
+name: CI
+
+# Authoritative validation environment (Python 3.12, PostgreSQL 16, uv.lock).
+# workflow_dispatch lets a maintainer validate any branch, including the bot-created
+# "chore/update-uv-lock" branch (pull requests opened with GITHUB_TOKEN do not start CI).
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.12.23"
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  lock:
+    name: Lock file is present and current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Require uv.lock
+        run: |
+          if [ ! -f uv.lock ]; then
+            echo "::error::uv.lock is missing. Run the 'Update uv.lock' workflow (Actions tab) and merge its pull request."
+            exit 1
+          fi
+      - run: uv lock --check
+      - name: Only PyPI is used as a package source
+        run: |
+          if grep -E '^source = ' uv.lock | grep -v -E 'registry = "https://pypi.org/simple"|editable = "\."|virtual = "\."' ; then
+            echo "::error::uv.lock contains an unexpected package source"; exit 1
+          fi
+
+  quality:
+    name: Lint, types, security
+    needs: lock
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run djlint --lint src/templates
+      - run: uv run mypy src
+      - run: uv run bandit -q -r src -c pyproject.toml
+      - name: Dependency vulnerability audit
+        run: |
+          uv export --frozen --no-dev --no-emit-project --no-hashes -o "$RUNNER_TEMP/requirements.audit.txt"
+          uv run pip-audit -r "$RUNNER_TEMP/requirements.audit.txt" --no-deps --disable-pip
+      - name: pre-commit (all files)
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+  test:
+    name: Tests (Python 3.12, PostgreSQL 16)
+    needs: lock
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ci
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://ci:ci-only-password@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: uv sync --frozen
+      - run: uv run python --version
+      - name: Django system check and migration drift
+        working-directory: src
+        run: |
+          uv run python manage.py check --settings=config.settings.test
+          uv run python manage.py makemigrations --check --dry-run --settings=config.settings.test
+          uv run python manage.py migrate --plan --settings=config.settings.test
+      - name: Migrate a clean PostgreSQL database, then re-check
+        working-directory: src
+        run: |
+          uv run python manage.py migrate --noinput --settings=config.settings.test
+          uv run python manage.py createcachetable --settings=config.settings.test
+          uv run python manage.py sync_roles --settings=config.settings.test
+          uv run python manage.py makemigrations --check --dry-run --settings=config.settings.test
+          uv run python manage.py check --database default --settings=config.settings.test
+      - name: Production configuration and deployment check
+        working-directory: src
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.production
+          ALLOWED_HOSTS: ci.example.invalid
+          CSRF_TRUSTED_ORIGINS: https://ci.example.invalid
+          SITE_URL: https://ci.example.invalid
+          EMAIL_HOST: localhost
+          DEFAULT_FROM_EMAIL: ci@example.invalid
+          ADMIN_CONTACT_EMAIL: ci@example.invalid
+          PRIVACY_CONTACT_EMAIL: ci@example.invalid
+          HSTS_SECONDS: "31536000"
+          GALLERY_ROOT: ${{ runner.temp }}/gallery
+          SHEET_MUSIC_ROOT: ${{ runner.temp }}/sheet_music
+        run: |
+          export SECRET_KEY="$(openssl rand -base64 48)"
+          uv run python manage.py check --deploy --fail-level WARNING
+          # Missing required configuration must fail loudly, never fall back.
+          if SECRET_KEY= uv run python manage.py check >/dev/null 2>&1; then
+            echo "::error::production settings started without SECRET_KEY"; exit 1
+          fi
+          if DATABASE_URL=sqlite:///x.sqlite3 uv run python manage.py check >/dev/null 2>&1; then
+            echo "::error::production settings accepted SQLite"; exit 1
+          fi
+      - name: Demo data is idempotent
+        working-directory: src
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.local
+          DEBUG: "true"
+          SECRET_KEY: ci-local-settings-only
+          GALLERY_ROOT: ${{ runner.temp }}/demo/gallery
+          SHEET_MUSIC_ROOT: ${{ runner.temp }}/demo/sheet_music
+        run: |
+          uv run python manage.py load_demo_data
+          uv run python manage.py load_demo_data
+      - name: Full test suite on PostgreSQL
+        run: uv run pytest --cov=src --cov-report=term-missing --cov-report=xml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          retention-days: 7
+
+  e2e:
+    name: Browser tests (Playwright, real live server)
+    needs: lock
+    runs-on: ubuntu-latest
+    env:
+      # pytest-django's live_server runs inside Playwright's sync event loop thread.
+      DJANGO_ALLOW_ASYNC_UNSAFE: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: uv sync --frozen
+      - run: uv run playwright install --with-deps chromium
+      - run: uv run pytest -m e2e --no-cov
+
+  docker:
+    name: Docker image build and runtime against PostgreSQL
+    needs: lock
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose.yaml
+        run: |
+          cp .env.example .env
+          docker compose -f compose.yaml config --quiet
+          rm .env
+      - run: docker build -t oderske-chasy:ci .
+      - name: Image properties
+        run: |
+          docker run --rm --entrypoint id oderske-chasy:ci -u | grep -qx 10001
+          docker run --rm --entrypoint python oderske-chasy:ci --version | grep -q '^Python 3\.12\.'
+          if docker run --rm --entrypoint sh oderske-chasy:ci -c 'command -v gcc || command -v uv'; then
+            echo "::error::build tools present in runtime image"; exit 1
+          fi
+          docker run --rm --entrypoint sh oderske-chasy:ci -c 'test -z "$(ls -A /data/gallery /data/sheet_music)"'
+          docker run --rm --entrypoint sh oderske-chasy:ci -c 'test -f /app/staticfiles/staticfiles.json'
+          if docker history --no-trunc oderske-chasy:ci | grep -E 'SECRET_KEY=[^"$]'; then
+            echo "::error::literal secret in image history"; exit 1
+          fi
+      - name: Run against PostgreSQL (release migration, gunicorn, health)
+        run: |
+          set -eu
+          docker network create ci
+          docker run -d --name db --network ci -e POSTGRES_DB=app -e POSTGRES_USER=app \
+            -e POSTGRES_PASSWORD=ci-only-password postgres:16-alpine
+          for i in $(seq 1 30); do docker exec db pg_isready -U app -d app && break; sleep 2; done
+          cat > "$RUNNER_TEMP/app.env" <<EOF
+          SECRET_KEY=ci-only-$(openssl rand -hex 32)
+          ALLOWED_HOSTS=localhost
+          CSRF_TRUSTED_ORIGINS=https://localhost
+          SITE_URL=https://localhost
+          DATABASE_URL=postgresql://app:ci-only-password@db:5432/app
+          EMAIL_HOST=localhost
+          DEFAULT_FROM_EMAIL=ci@example.invalid
+          ADMIN_CONTACT_EMAIL=ci@example.invalid
+          PRIVACY_CONTACT_EMAIL=ci@example.invalid
+          HEALTHCHECK_HOST=localhost
+          EOF
+          docker run --rm --network ci --env-file "$RUNNER_TEMP/app.env" oderske-chasy:ci \
+            sh -c 'python manage.py migrate --noinput && python manage.py createcachetable && python manage.py sync_roles'
+          docker run -d --name web --network ci -p 127.0.0.1:8000:8000 --env-file "$RUNNER_TEMP/app.env" \
+            --read-only --tmpfs /tmp --cap-drop ALL oderske-chasy:ci
+          for i in $(seq 1 30); do
+            s=$(docker inspect -f '{{.State.Health.Status}}' web); echo "health: $s"
+            [ "$s" = healthy ] && break; sleep 3
+          done
+          [ "$(docker inspect -f '{{.State.Health.Status}}' web)" = healthy ]
+          curl -fsS -H 'Host: localhost' http://127.0.0.1:8000/health/ready/
+          curl -fsS -o /dev/null -H 'Host: localhost' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8000/
+          docker logs web 2>&1 | grep -q 'Booting worker'
+          docker stop -t 20 web
+          [ "$(docker inspect -f '{{.State.ExitCode}}' web)" = 0 ]
+      - name: Container logs
+        if: failure()
+        run: docker logs web || true

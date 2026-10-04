@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Archiv akcí | {% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Archiv akcí</h1>
+  {% if page.object_list %}
+    <ul class="card-grid">
+      {% for event in page.object_list %}<li>{% include "events/_card.html" %}</li>{% endfor %}
+    </ul>
+    {% include "partials/pagination.html" %}
+  {% else %}
+    <p>Archiv je zatím prázdný.</p>
+  {% endif %}
+  <p><a href="{% url 'events:list' %}">Nadcházející akce</a></p>
+</div>
+{% endblock %}

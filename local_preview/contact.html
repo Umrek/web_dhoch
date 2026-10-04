@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!-- Static local preview only. Not used by the production Django application. Does not validate backend functionality. -->
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kontakt | Dechová hudba Oderské chasy (náhled)</title>
+  <meta name="description" content="Dechová hudba Oderské chasy – koncerty, zábavy a slavnosti.">
+  <link rel="stylesheet" href="../src/static/css/tokens.css">
+  <link rel="stylesheet" href="../src/static/css/base.css">
+  <link rel="stylesheet" href="../src/static/css/layout.css">
+  <link rel="stylesheet" href="../src/static/css/components.css">
+  <link rel="stylesheet" href="../src/static/css/portal.css">
+  <link rel="stylesheet" href="assets/css/preview.css">
+  <link rel="icon" href="../src/static/img/favicon.svg" type="image/svg+xml">
+  <script src="../src/static/js/menu.js" defer></script>
+  <script src="assets/js/preview.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+  <p class="preview-banner" role="note"><strong>Lokální náhled vzhledu.</strong> Nejde o běžící aplikaci, data jsou smyšlená a formuláře nic neodesílají.</p>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="wordmark" href="index.html">
+        <span class="wordmark-top">Dechová hudba</span>
+        <span class="wordmark-main">Oderské chasy</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="index.html">Domů</a></li>
+          <li><a href="about.html">O kapele</a></li>
+          <li><a href="events.html">Akce</a></li>
+          <li><a href="gallery.html">Galerie</a></li>
+          <li><a href="contact.html" aria-current="page">Kontakt</a></li>
+          <li><a href="login.html">Přihlášení</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" tabindex="-1">
+<div class="container narrow">
+  <h1>Kontakt</h1>
+  <p>Chcete nás pozvat na akci? Napište nám. E-mail: kapela@example.invalid</p>
+  <div class="preview-states" id="stavy-kontakt" data-states>
+    <p class="preview-state-label">Ukázka stavu:</p>
+    <button type="button" class="button button-secondary" data-show="prazdny" hidden>Prázdný formulář</button>
+    <button type="button" class="button button-secondary" data-show="chyby" hidden>Chyby</button>
+    <button type="button" class="button button-secondary" data-show="odeslano" hidden>Odesláno</button>
+  </div>
+  <div data-state-group="stavy-kontakt" data-state="prazdny">
+    <p class="preview-state-label">Stav: prázdný formulář</p>
+    <form method="post" action="#" novalidate class="form" data-preview>
+      <div class="field">
+        <label for="id_name">Jméno</label>
+
+        <input type="text" id="id_name" name="name" maxlength="100" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="id_email">E-mail</label>
+
+        <input type="email" id="id_email" name="email" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="id_phone">Telefon <span class="optional">(nepovinné)</span></label>
+        <input type="tel" id="id_phone" name="phone" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="id_message">Zpráva</label>
+        <textarea id="id_message" name="message" rows="6"></textarea>
+      </div>
+      <div class="field field-check">
+        <label for="id_consent"><input type="checkbox" id="id_consent" name="consent"> <span>Beru na vědomí zpracování údajů za účelem odpovědi</span></label>
+        <p class="help">Podrobnosti v <a href="privacy.html">zásadách ochrany osobních údajů</a>. Zprávy mažeme po 90 dnech.</p>
+
+      </div>
+      <button type="submit" class="button">Odeslat zprávu</button>
+    </form>
+  </div>
+  <div data-state-group="stavy-kontakt" data-state="chyby">
+    <p class="preview-state-label">Stav: chyby ve formuláři (ukázka)</p>
+    <form method="post" action="#" novalidate class="form" data-preview>
+      <div class="error-summary" role="alert" tabindex="-1">
+        <h2>Formulář obsahuje chyby</h2>
+        <ul>
+          <li><a href="#id_name-e">Jméno: Toto pole je povinné.</a></li>
+          <li><a href="#id_email-e">E-mail: Zadejte platnou e-mailovou adresu.</a></li>
+          <li><a href="#id_consent-e">Souhlas: Pro odeslání je potřeba potvrdit.</a></li>
+        </ul>
+      </div>
+      <div class="field">
+        <label for="id_name-e">Jméno</label>
+        <p class="field-error" id="id_name-e_error"><span class="visually-hidden">Chyba: </span>Toto pole je povinné.</p>
+        <input type="text" id="id_name-e" name="name" maxlength="100" autocomplete="name" aria-invalid="true" aria-describedby="id_name-e_error">
+      </div>
+      <div class="field">
+        <label for="id_email-e">E-mail</label>
+        <p class="field-error" id="id_email-e_error"><span class="visually-hidden">Chyba: </span>Zadejte platnou e-mailovou adresu.</p>
+        <input type="email" id="id_email-e" name="email" autocomplete="email" value="jana@" aria-invalid="true" aria-describedby="id_email-e_error">
+      </div>
+      <div class="field">
+        <label for="id_phone-e">Telefon <span class="optional">(nepovinné)</span></label>
+        <input type="tel" id="id_phone-e" name="phone" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="id_message-e">Zpráva</label>
+        <textarea id="id_message-e" name="message" rows="6"></textarea>
+      </div>
+      <div class="field field-check">
+        <label for="id_consent-e"><input type="checkbox" id="id_consent-e" name="consent" aria-invalid="true" aria-describedby="id_consent-e_error"> <span>Beru na vědomí zpracování údajů za účelem odpovědi</span></label>
+        <p class="help">Podrobnosti v <a href="privacy.html">zásadách ochrany osobních údajů</a>. Zprávy mažeme po 90 dnech.</p>
+        <p class="field-error" id="id_consent-e_error"><span class="visually-hidden">Chyba: </span>Pro odeslání je potřeba potvrdit.</p>
+      </div>
+      <button type="submit" class="button">Odeslat zprávu</button>
+    </form>
+  </div>
+  <div data-state-group="stavy-kontakt" data-state="odeslano">
+    <p class="preview-state-label">Stav: po odeslání (ukázka)</p>
+    <div class="prose">
+      <h2>Děkujeme za zprávu</h2>
+      <p>Ozveme se vám co nejdříve na uvedený e-mail.</p>
+    </div>
+  </div>
+</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-title">Dechová hudba Oderské chasy</p>
+        <p>Dechová hudba z Oder a okolí.</p>
+      </div>
+      <nav aria-label="Právní informace">
+        <ul class="footer-links">
+          <li><a href="privacy.html">Ochrana osobních údajů</a></li>
+          <li><a href="cookies.html">Cookies</a></li>
+          <li><a href="accessibility.html">Prohlášení o přístupnosti</a></li>
+          <li><a href="403.html">Ukázka: 403</a></li>
+          <li><a href="404.html">Ukázka: 404</a></li>
+          <li><a href="500.html">Ukázka: 500</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

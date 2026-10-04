@@ -1,0 +1,17 @@
+{% extends "portal_base.html" %}
+{% block title %}Můj profil | {% endblock %}
+{% block portal %}
+<div class="narrow">
+  <h1>Můj profil</h1>
+  {% if form %}
+    <p>Sekce: <strong>{{ profile.get_section_display }}</strong> (změnu provede správce).</p>
+    <p>Veřejně se zobrazí pouze jméno, sekce a nástroj, a to jen pokud zaškrtnete souhlas. Telefon nikdy není veřejný. Souhlas můžete kdykoli odvolat.</p>
+    <form method="post" novalidate class="form">
+      {% csrf_token %}
+      {% include "partials/form.html" with submit="Uložit profil" %}
+    </form>
+  {% else %}
+    <p>Profil zatím neexistuje. Kontaktujte správce.</p>
+  {% endif %}
+</div>
+{% endblock %}

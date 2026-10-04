@@ -1,0 +1,44 @@
+{% extends "portal_base.html" %}
+{% block title %}Noty | {% endblock %}
+{% block portal %}
+<h1>Noty</h1>
+<p class="notice" role="note">Noty mohou podléhat autorskému právu. Slouží výhradně členům kapely pro nácvik a vystoupení; dále je nešiřte.</p>
+<form method="get" class="filter-form">
+  <div class="field">
+    <label for="q">Hledat skladbu</label>
+    <input type="search" id="q" name="q" value="{{ query }}" maxlength="100">
+  </div>
+  <div class="field">
+    <label for="sekce">Hlas / sekce</label>
+    <select id="sekce" name="sekce">
+      <option value="">Všechny</option>
+      {% for value, label in sections %}
+        <option value="{{ value }}"{% if value == section %} selected{% endif %}>{{ label }}{% if value == own_section %} (moje sekce){% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="button" type="submit">Filtrovat</button>
+</form>
+<table class="table">
+  <caption class="visually-hidden">Skladby a jejich hlasy ke stažení</caption>
+  <thead><tr><th scope="col">Skladba</th><th scope="col">Skladatel / aranžér</th><th scope="col">Hlasy (PDF)</th></tr></thead>
+  <tbody>
+    {% for piece in page.object_list %}
+      <tr>
+        <th scope="row">{{ piece.title }}</th>
+        <td>{{ piece.composer }}{% if piece.arranger %} / {{ piece.arranger }}{% endif %}</td>
+        <td>
+          <ul class="plain-list inline-list">
+            {% for part in piece.current_parts %}
+              <li><a href="{% url 'sheet_music:download' part.pk %}">{{ part.get_section_display }}<span class="visually-hidden"> – {{ piece.title }}</span></a></li>
+            {% empty %}<li>Bez hlasů</li>{% endfor %}
+          </ul>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="3">Žádné skladby.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% include "partials/pagination.html" with extra=extra_query %}
+{% endblock %}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- Static local preview only. Not used by the production Django application. Does not validate backend functionality. -->
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Akce a docházka | Dechová hudba Oderské chasy (náhled)</title>
+  <meta name="description" content="Dechová hudba Oderské chasy – koncerty, zábavy a slavnosti.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../src/static/css/tokens.css">
+  <link rel="stylesheet" href="../src/static/css/base.css">
+  <link rel="stylesheet" href="../src/static/css/layout.css">
+  <link rel="stylesheet" href="../src/static/css/components.css">
+  <link rel="stylesheet" href="../src/static/css/portal.css">
+  <link rel="stylesheet" href="assets/css/preview.css">
+  <link rel="icon" href="../src/static/img/favicon.svg" type="image/svg+xml">
+  <script src="../src/static/js/menu.js" defer></script>
+  <script src="assets/js/preview.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+  <p class="preview-banner" role="note"><strong>Lokální náhled vzhledu.</strong> Nejde o běžící aplikaci, data jsou smyšlená a formuláře nic neodesílají.</p>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="wordmark" href="index.html">
+        <span class="wordmark-top">Dechová hudba</span>
+        <span class="wordmark-main">Oderské chasy</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="index.html">Domů</a></li>
+          <li><a href="about.html">O kapele</a></li>
+          <li><a href="events.html">Akce</a></li>
+          <li><a href="gallery.html">Galerie</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
+          <li><a class="nav-portal" href="musician-dashboard.html">Portál</a></li>
+          <li><form method="post" action="#" class="inline-form" data-preview><button type="submit" class="link-button">Odhlásit se</button></form></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" tabindex="-1">
+<div class="container">
+  <nav class="portal-nav" aria-label="Portál">
+    <ul>
+      <li><a href="musician-dashboard.html">Přehled</a></li>
+      <li><a href="attendance.html" aria-current="page">Akce a docházka</a></li>
+      <li><a href="sheet-music.html">Noty</a></li>
+      <li><a href="#" data-preview>Můj profil</a></li>
+      <li><a href="#" data-preview>Změna hesla</a></li>
+    </ul>
+  </nav>
+<h1>Akce a docházka</h1>
+<div class="table-wrap">
+<table class="table">
+  <caption class="visually-hidden">Nadcházející akce a vaše odpovědi</caption>
+  <thead><tr><th scope="col">Akce</th><th scope="col">Termín</th><th scope="col">Uzávěrka</th><th scope="col">Vaše odpověď</th></tr></thead>
+  <tbody>
+    <tr><th scope="row"><a href="attendance-detail.html">Zkouška</a></th><td>9. 10. 2026, 18:30</td><td>8. 10. 2026, 20:00</td><td><span class="status status-ano">Přijdu</span></td></tr>
+    <tr><th scope="row"><a href="attendance-detail.html">Posvícenský koncert</a></th><td>17. 10. 2026, 15:00</td><td>12. 10. 2026, 20:00</td><td><span class="status status-mozna">Možná</span></td></tr>
+    <tr><th scope="row"><a href="attendance-detail.html">Martinská zábava</a></th><td>7. 11. 2026, 19:00</td><td>1. 11. 2026, 20:00</td><td><span class="status status-ne">Nepřijdu</span></td></tr>
+    <tr><th scope="row"><a href="attendance-detail.html">Zkouška</a></th><td>16. 10. 2026, 18:30</td><td>15. 10. 2026, 20:00</td><td><span class="status status-none">Bez odpovědi</span></td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-title">Dechová hudba Oderské chasy</p>
+        <p>Dechová hudba z Oder a okolí.</p>
+      </div>
+      <nav aria-label="Právní informace">
+        <ul class="footer-links">
+          <li><a href="privacy.html">Ochrana osobních údajů</a></li>
+          <li><a href="cookies.html">Cookies</a></li>
+          <li><a href="accessibility.html">Prohlášení o přístupnosti</a></li>
+          <li><a href="403.html">Ukázka: 403</a></li>
+          <li><a href="404.html">Ukázka: 404</a></li>
+          <li><a href="500.html">Ukázka: 500</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

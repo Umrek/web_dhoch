@@ -1,0 +1,6 @@
+<article class="card">
+  <p class="card-date"><time datetime="{{ event.starts_at|date:'c' }}">{{ event.starts_at|date:"j. n. Y, H:i" }}</time></p>
+  <h3><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h3>
+  {% if event.venue_name %}<p>{{ event.venue_name }}</p>{% endif %}
+  {% if event.is_cancelled %}<p class="badge badge-cancelled">Zrušeno</p>{% endif %}
+</article>

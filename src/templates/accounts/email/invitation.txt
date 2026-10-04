@@ -1,0 +1,7 @@
+Dobrý den,
+
+byl Vám založen účet v portálu {{ site_name }}. Heslo si nastavíte na tomto odkazu (platí 1 hodinu):
+
+{{ setup_url }}
+
+Pokud jste pozvánku nečekali, e-mail ignorujte.

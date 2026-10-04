@@ -1,0 +1,78 @@
+{% load static %}<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}{{ SITE_NAME }}</title>
+  <meta name="description" content="{% block description %}Dechová hudba Oderské chasy – koncerty, zábavy a slavnosti.{% endblock %}">
+  {% block robots %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'css/portal.css' %}">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <script src="{% static 'js/menu.js' %}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="wordmark" href="{% url 'content:home' %}">
+        <span class="wordmark-top">Dechová hudba</span>
+        <span class="wordmark-main">Oderské chasy</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="{% url 'content:home' %}"{% if request.resolver_match.view_name == 'content:home' %} aria-current="page"{% endif %}>Domů</a></li>
+          <li><a href="{% url 'content:about' %}"{% if request.resolver_match.view_name == 'content:about' %} aria-current="page"{% endif %}>O kapele</a></li>
+          <li><a href="{% url 'events:list' %}"{% if request.resolver_match.app_name == 'events' %} aria-current="page"{% endif %}>Akce</a></li>
+          <li><a href="{% url 'gallery:list' %}"{% if request.resolver_match.app_name == 'gallery' %} aria-current="page"{% endif %}>Galerie</a></li>
+          <li><a href="{% url 'contact:form' %}"{% if request.resolver_match.app_name == 'contact' %} aria-current="page"{% endif %}>Kontakt</a></li>
+          {% if user.is_authenticated %}
+            {% if perms.accounts.access_portal %}
+              <li><a class="nav-portal" href="{% url 'musicians:dashboard' %}">Portál</a></li>
+            {% endif %}
+            {% if user.is_staff %}
+              <li><a href="{% url 'admin:index' %}">Správa</a></li>
+            {% endif %}
+            <li>
+              <form method="post" action="{% url 'accounts:logout' %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="link-button">Odhlásit se</button>
+              </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'accounts:login' %}">Přihlášení</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" tabindex="-1">
+    {% include "partials/messages.html" %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-title">{{ SITE_NAME }}</p>
+        <p>Dechová hudba z Oder a okolí.</p>
+      </div>
+      <nav aria-label="Právní informace">
+        <ul class="footer-links">
+          <li><a href="{% url 'content:legal' 'ochrana-osobnich-udaju' %}">Ochrana osobních údajů</a></li>
+          <li><a href="{% url 'content:legal' 'cookies' %}">Cookies</a></li>
+          <li><a href="{% url 'content:legal' 'provozovatel' %}">Provozovatel</a></li>
+          <li><a href="{% url 'content:legal' 'prohlaseni-o-pristupnosti' %}">Prohlášení o přístupnosti</a></li>
+          <li><a href="{% url 'content:legal' 'bezpecnost' %}">Bezpečnostní kontakt</a></li>
+          <li><a href="{% url 'content:legal' 'odstraneni-fotografie' %}">Odstranění fotografie</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

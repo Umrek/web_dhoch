@@ -1,0 +1,27 @@
+/* Design tokens: parchment, burgundy, green, navy and brass.
+   Contrast checked for body text (>= 4.5:1) on the light surfaces. */
+:root {
+  --color-parchment: #f6efe0;
+  --color-paper: #fffaf0;
+  --color-ink: #231f1c;
+  --color-muted: #5a504a;
+  --color-burgundy: #7a1f2b;
+  --color-burgundy-dark: #5c1620;
+  --color-green: #2f5d3a;
+  --color-navy: #1d2f4d;
+  --color-brass: #b08a3e;
+  --color-border: #d8cdb4;
+  --color-focus: #1d4ed8;
+
+  --font-body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --radius: 6px;
+  --max-width: 68rem;
+  --narrow-width: 42rem;
+}

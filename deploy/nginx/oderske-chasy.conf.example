@@ -1,0 +1,29 @@
+# Example reverse proxy for TLS termination. Adjust server_name and certificate paths.
+# Never expose gunicorn directly. Private files are served by Django, never from disk by nginx.
+
+server {
+    listen 80;
+    server_name kapela.example.test;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name kapela.example.test;
+
+    ssl_certificate     /etc/ssl/kapela/fullchain.pem;
+    ssl_certificate_key /etc/ssl/kapela/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    client_max_body_size 16m;   # >= MAX_SHEET_MUSIC_BYTES
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;   # overwrite, do not append client-supplied values
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 30s;
+    }
+}

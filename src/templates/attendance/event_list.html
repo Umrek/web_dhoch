@@ -1,0 +1,27 @@
+{% extends "portal_base.html" %}
+{% block title %}Akce a docházka | {% endblock %}
+{% block portal %}
+<h1>Akce a docházka</h1>
+<nav aria-label="Filtr akcí" class="filter-row">
+  <a href="?"{% if not kind and upcoming %} aria-current="true"{% endif %}>Vše</a>
+  {% for value, label in kinds %}<a href="?druh={{ value }}"{% if kind == value %} aria-current="true"{% endif %}>{{ label }}</a>{% endfor %}
+  {% if upcoming %}<a href="?archiv=1">Proběhlé</a>{% else %}<a href="?">Nadcházející</a>{% endif %}
+</nav>
+<table class="table">
+  <caption class="visually-hidden">Seznam akcí s Vaší odpovědí</caption>
+  <thead><tr><th scope="col">Akce</th><th scope="col">Termín</th><th scope="col">Druh</th><th scope="col">Stav</th><th scope="col">Vaše odpověď</th></tr></thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <th scope="row"><a href="{% url 'attendance:detail' row.event.slug %}">{{ row.event.title }}</a></th>
+      <td>{{ row.event.starts_at|date:"j. n. Y, H:i" }}</td>
+      <td>{{ row.event.get_kind_display }}</td>
+      <td>{{ row.event.get_status_display }}</td>
+      <td>{% if row.response %}{{ row.response.get_status_display }}{% elif row.open %}Čeká na odpověď{% else %}–{% endif %}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Žádné akce.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

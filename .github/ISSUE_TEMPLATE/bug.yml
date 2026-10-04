@@ -1,0 +1,14 @@
+name: Chyba
+description: Něco nefunguje. Nevkládejte hesla, osobní údaje ani zranitelnosti (ty hlaste podle SECURITY.md).
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Co se stalo a co jste očekávali?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Postup k reprodukci

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Přihlášení | {% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block content %}
+<div class="container narrow">
+  <h1>Přihlášení do portálu</h1>
+  <p>Portál je určen členům kapely. Účty zakládá správce na pozvání.</p>
+  <form method="post" novalidate class="form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% include "partials/form.html" with submit="Přihlásit se" %}
+  </form>
+  <p><a href="{% url 'accounts:password_reset' %}">Zapomenuté heslo</a></p>
+</div>
+{% endblock %}

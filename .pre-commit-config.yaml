@@ -1,0 +1,35 @@
+# Run `uv run pre-commit install` once. Tool hooks run from the locked environment (no unpinned downloads).
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types: [python]
+      - id: djlint
+        name: djlint (templates)
+        entry: uv run djlint --lint
+        language: system
+        files: ^src/templates/.*\.html$
+      - id: no-env-files
+        name: block .env / key / certificate files
+        entry: "Refusing to commit secrets or certificates"
+        language: fail
+        files: (^|/)(\.env(\.(?!example$).+)?|.*\.(pem|key|crt|p12|pfx))$

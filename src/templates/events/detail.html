@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }} | {% endblock %}
+{% block description %}{{ event.title }} – {{ event.starts_at|date:"j. n. Y" }}{% endblock %}
+{% block content %}
+<article class="container narrow prose">
+  <h1>{{ event.title }}</h1>
+  {% if event.is_cancelled %}<p class="notice" role="note"><strong>Tato akce byla zrušena.</strong></p>{% endif %}
+  <dl class="facts">
+    <dt>Termín</dt>
+    <dd><time datetime="{{ event.starts_at|date:'c' }}">{{ event.starts_at|date:"l j. n. Y, H:i" }}</time></dd>
+    {% if event.venue_name or event.venue_address %}
+      <dt>Místo</dt>
+      <dd>{{ event.venue_name }}{% if event.venue_address %}, {{ event.venue_address }}{% endif %}
+        {% if event.map_link %}<br><a href="{{ event.map_link }}" rel="noopener noreferrer">Zobrazit na mapě</a>{% endif %}</dd>
+    {% endif %}
+  </dl>
+  {% for paragraph in event.public_description.splitlines %}{% if paragraph %}<p>{{ paragraph }}</p>{% endif %}{% endfor %}
+  {% if not is_past and not event.is_cancelled %}
+    <p><a class="button" href="{% url 'events:ics' event.slug %}">Přidat do kalendáře (.ics)</a></p>
+  {% endif %}
+  <p><a href="{% url 'events:list' %}">Zpět na akce</a></p>
+</article>
+{% endblock %}

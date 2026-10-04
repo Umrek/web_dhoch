@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Galerie | {% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Fotogalerie</h1>
+  {% for album in albums %}
+    {% if forloop.first %}<ul class="card-grid">{% endif %}
+    <li>
+      <article class="card">
+        <h2><a href="{{ album.get_absolute_url }}">{{ album.title }}</a></h2>
+        <p>{{ album.photo_count }} fotografií{% if album.happened_on %} · {{ album.happened_on|date:"j. n. Y" }}{% endif %}</p>
+      </article>
+    </li>
+    {% if forloop.last %}</ul>{% endif %}
+  {% empty %}
+    <p>Zatím tu nejsou žádné fotografie.</p>
+  {% endfor %}
+  <p><a href="{% url 'content:legal' 'odstraneni-fotografie' %}">Chcete odstranit svou fotografii?</a></p>
+</div>
+{% endblock %}

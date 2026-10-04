@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Účet dočasně uzamčen | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>Účet je dočasně uzamčen</h1>
+  <p>Příliš mnoho neúspěšných pokusů o přihlášení. Zkuste to prosím později nebo si nechte obnovit heslo.</p>
+  <p><a href="{% url 'accounts:password_reset' %}">Obnovit heslo</a></p>
+</div>
+{% endblock %}

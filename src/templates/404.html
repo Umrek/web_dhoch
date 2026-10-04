@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Stránka nenalezena | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>Stránka nenalezena</h1>
+  <p>Hledaná stránka neexistuje nebo byla přesunuta.</p>
+  <p><a href="{% url 'content:home' %}">Zpět na úvodní stránku</a></p>
+</div>
+{% endblock %}

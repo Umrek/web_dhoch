@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{# Shared shell for member pages: noindex + portal sub-navigation. #}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block content %}
+<div class="container">
+  <nav class="portal-nav" aria-label="Portál">
+    <ul>
+      <li><a href="{% url 'musicians:dashboard' %}"{% if request.resolver_match.view_name == 'musicians:dashboard' %} aria-current="page"{% endif %}>Přehled</a></li>
+      <li><a href="{% url 'attendance:list' %}"{% if request.resolver_match.app_name == 'attendance' %} aria-current="page"{% endif %}>Akce a docházka</a></li>
+      <li><a href="{% url 'sheet_music:list' %}"{% if request.resolver_match.app_name == 'sheet_music' %} aria-current="page"{% endif %}>Noty</a></li>
+      <li><a href="{% url 'musicians:profile' %}"{% if request.resolver_match.view_name == 'musicians:profile' %} aria-current="page"{% endif %}>Můj profil</a></li>
+      <li><a href="{% url 'accounts:password_change' %}">Změna hesla</a></li>
+    </ul>
+  </nav>
+  {% block portal %}{% endblock %}
+</div>
+{% endblock %}

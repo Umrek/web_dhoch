@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!-- Static local preview only. Not used by the production Django application. Does not validate backend functionality. -->
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noty | Dechová hudba Oderské chasy (náhled)</title>
+  <meta name="description" content="Dechová hudba Oderské chasy – koncerty, zábavy a slavnosti.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../src/static/css/tokens.css">
+  <link rel="stylesheet" href="../src/static/css/base.css">
+  <link rel="stylesheet" href="../src/static/css/layout.css">
+  <link rel="stylesheet" href="../src/static/css/components.css">
+  <link rel="stylesheet" href="../src/static/css/portal.css">
+  <link rel="stylesheet" href="assets/css/preview.css">
+  <link rel="icon" href="../src/static/img/favicon.svg" type="image/svg+xml">
+  <script src="../src/static/js/menu.js" defer></script>
+  <script src="assets/js/preview.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+  <p class="preview-banner" role="note"><strong>Lokální náhled vzhledu.</strong> Nejde o běžící aplikaci, data jsou smyšlená a formuláře nic neodesílají.</p>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="wordmark" href="index.html">
+        <span class="wordmark-top">Dechová hudba</span>
+        <span class="wordmark-main">Oderské chasy</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Hlavní navigace">
+        <ul>
+          <li><a href="index.html">Domů</a></li>
+          <li><a href="about.html">O kapele</a></li>
+          <li><a href="events.html">Akce</a></li>
+          <li><a href="gallery.html">Galerie</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
+          <li><a class="nav-portal" href="musician-dashboard.html">Portál</a></li>
+          <li><form method="post" action="#" class="inline-form" data-preview><button type="submit" class="link-button">Odhlásit se</button></form></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="obsah" tabindex="-1">
+<div class="container">
+  <nav class="portal-nav" aria-label="Portál">
+    <ul>
+      <li><a href="musician-dashboard.html">Přehled</a></li>
+      <li><a href="attendance.html">Akce a docházka</a></li>
+      <li><a href="sheet-music.html" aria-current="page">Noty</a></li>
+      <li><a href="#" data-preview>Můj profil</a></li>
+      <li><a href="#" data-preview>Změna hesla</a></li>
+    </ul>
+  </nav>
+<h1>Noty</h1>
+<p class="notice" role="note">Noty mohou podléhat autorskému právu. Slouží výhradně členům kapely pro nácvik a vystoupení; dále je nešiřte.</p>
+<form method="get" action="#" class="filter-form" data-preview>
+  <div class="field">
+    <label for="q">Hledat skladbu</label>
+    <input type="search" id="q" name="q" maxlength="100">
+  </div>
+  <div class="field">
+    <label for="sekce">Hlas / sekce</label>
+    <select id="sekce" name="sekce">
+      <option value="">Všechny</option>
+      <option>Křídlovka (moje sekce)</option>
+      <option>Tuba</option>
+      <option>Klarinet</option>
+    </select>
+  </div>
+  <button class="button" type="submit">Filtrovat</button>
+</form>
+<div class="table-wrap">
+<table class="table">
+  <caption class="visually-hidden">Skladby a jejich hlasy ke stažení</caption>
+  <thead><tr><th scope="col">Skladba</th><th scope="col">Skladatel / aranžér</th><th scope="col">Hlasy (PDF, verze)</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Ukázková polka</th><td>Smyšlený autor / Fiktivní aranžér</td><td><ul class="plain-list inline-list"><li><a href="#" data-preview>Křídlovka 1 (v2)<span class="visually-hidden"> – PDF</span></a></li><li><a href="#" data-preview>Tuba (v1)<span class="visually-hidden"> – PDF</span></a></li><li><a href="#" data-preview>Klarinet (v1)<span class="visually-hidden"> – PDF</span></a></li></ul></td></tr>
+    <tr><th scope="row">Vzorový valčík</th><td>Smyšlený autor</td><td><ul class="plain-list inline-list"><li><a href="#" data-preview>Křídlovka 1 (v1)<span class="visually-hidden"> – PDF</span></a></li><li><a href="#" data-preview>Baryton (v1)<span class="visually-hidden"> – PDF</span></a></li></ul></td></tr>
+    <tr><th scope="row">Testovací pochod</th><td>Fiktivní skladatel</td><td><ul class="plain-list inline-list"><li>Bez hlasů</li></ul></td></tr>
+  </tbody>
+</table>
+</div>
+<p>V náhledu nejsou žádné notové soubory; odkazy ke stažení jsou pouze ukázkové.</p>
+</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-title">Dechová hudba Oderské chasy</p>
+        <p>Dechová hudba z Oder a okolí.</p>
+      </div>
+      <nav aria-label="Právní informace">
+        <ul class="footer-links">
+          <li><a href="privacy.html">Ochrana osobních údajů</a></li>
+          <li><a href="cookies.html">Cookies</a></li>
+          <li><a href="accessibility.html">Prohlášení o přístupnosti</a></li>
+          <li><a href="403.html">Ukázka: 403</a></li>
+          <li><a href="404.html">Ukázka: 404</a></li>
+          <li><a href="500.html">Ukázka: 500</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

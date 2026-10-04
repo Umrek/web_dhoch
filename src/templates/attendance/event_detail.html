@@ -1,0 +1,27 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ event.title }} | {% endblock %}
+{% block portal %}
+<h1>{{ event.title }}</h1>
+{% if event.is_cancelled %}<p class="notice" role="note"><strong>Akce byla zrušena.</strong></p>{% endif %}
+<dl class="facts">
+  <dt>Druh</dt><dd>{{ event.get_kind_display }} ({{ event.get_status_display }})</dd>
+  <dt>Začátek</dt><dd>{{ event.starts_at|date:"l j. n. Y, H:i" }}</dd>
+  {% if event.meeting_time %}<dt>Sraz</dt><dd>{{ event.meeting_time|date:"j. n. Y, H:i" }}</dd>{% endif %}
+  {% if event.venue_name or event.venue_address %}<dt>Místo</dt><dd>{{ event.venue_name }} {{ event.venue_address }}{% if event.map_link %} · <a href="{{ event.map_link }}" rel="noopener noreferrer">mapa</a>{% endif %}</dd>{% endif %}
+  {% if event.attendance_deadline %}<dt>Uzávěrka odpovědí</dt><dd>{{ event.attendance_deadline|date:"j. n. Y, H:i" }}</dd>{% endif %}
+</dl>
+{% if event.internal_notes %}<h2>Interní pokyny</h2>{{ event.internal_notes|linebreaks }}{% endif %}
+
+<h2>Docházka</h2>
+{% if response %}<p>Vaše aktuální odpověď: <strong>{{ response.get_status_display }}</strong>{% if response.note %} ({{ response.note }}){% endif %}.</p>{% endif %}
+{% if open %}
+  <form method="post" novalidate class="form">
+    {% csrf_token %}
+    {% include "partials/form.html" with submit="Uložit odpověď" %}
+  </form>
+{% else %}
+  <p>Odpovědi na tuto akci jsou uzavřeny.</p>
+{% endif %}
+{% if can_view_overview %}<p><a href="{% url 'attendance:overview' event.slug %}">Přehled docházky (organizátor)</a></p>{% endif %}
+<p><a href="{% url 'attendance:list' %}">Zpět na seznam</a></p>
+{% endblock %}

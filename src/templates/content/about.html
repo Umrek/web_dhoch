@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}O kapele | {% endblock %}
+{% block content %}
+<div class="container narrow prose">
+  <h1>O kapele</h1>
+  {% include "content/_section.html" with page=history %}
+  {% include "content/_section.html" with page=style %}
+  {% include "content/_section.html" with page=current %}
+
+  <h2>Naši muzikanti</h2>
+  {% if roster %}
+    <p>Na veřejné stránce jsou jen ti členové, kteří s tím souhlasili.</p>
+    {% for section_label, members in roster %}
+      <h3>{{ section_label }}</h3>
+      <ul>
+        {% for member in members %}
+          <li>{{ member.display_name }}{% if member.instrument %} – {{ member.instrument }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  {% else %}
+    <p>Soupis členů kapely zatím není zveřejněn.</p>
+  {% endif %}
+</div>
+{% endblock %}

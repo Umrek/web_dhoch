@@ -1,0 +1,26 @@
+.git
+.github
+.venv
+.env
+.env.*
+!.env.example
+__pycache__
+*.py[cod]
+*.sqlite3
+var
+staticfiles
+tests
+docs
+htmlcov
+.pytest_cache
+.mypy_cache
+.ruff_cache
+node_modules
+*.log
+*.pem
+*.crt
+*.key
+
+# Static local preview (workstation-only design review, never shipped)
+local_preview
+tools
