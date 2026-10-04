@@ -9,7 +9,8 @@ Usage (repository root, Python 3.11+ standard library only):
 
 Serves exactly two read-only locations, bound to 127.0.0.1 only:
     /                -> local_preview/            (preview HTML, CSS, JS, images)
-    /src/static/...  -> src/static/               (the production CSS/JS/icons, reused unchanged)
+    /static/...      -> src/static/               (the production CSS/JS/icons, reused unchanged;
+                                                   GitHub Pages gets the same files copied to static/)
 Everything else (repository root, .git, .env, sources, tests, media) returns 404.
 """
 
@@ -28,7 +29,7 @@ HOST = "127.0.0.1"
 REPO_DIR = Path(__file__).resolve().parents[1]
 PREVIEW_DIR = (REPO_DIR / "local_preview").resolve()
 STATIC_DIR = (REPO_DIR / "src" / "static").resolve()
-STATIC_PREFIX = "/src/static/"
+STATIC_PREFIX = "/static/"
 
 CONTENT_TYPES = {
     ".html": "text/html; charset=utf-8",

@@ -48,12 +48,25 @@ python tools/local_preview.py --no-browser # do not open the browser automatical
 - The server listens on `127.0.0.1` only.
 - It serves only:
   - `local_preview/` (static HTML with fictional Czech content);
-  - the production CSS, JS and icons from `src/static/`, reused unchanged.
+  - the production CSS, JS and icons from `src/static/`, reused unchanged and served at `/static/`.
   Everything else returns 404, including the repository root, `.git`, `.env`, sources and tests.
+- Pages link to `static/…` relative paths, so open them through the server. Opening the HTML files directly from disk shows them without styles.
 - This is **not the Django application**. Login, the contact form, attendance answers, sheet-music downloads and logout are visual examples only. They show "Toto je pouze lokální náhled…" and send nothing.
 - When templates change, update the matching pages in `local_preview/` by hand.
 - `local_preview/` and `tools/` are excluded from the Docker image (`.dockerignore`) and are not part of any Django URL.
 - Tests, migrations, PostgreSQL, permissions, private files and production behaviour are validated only in GitHub Actions. See [docs/testing.md](docs/testing.md).
+
+## Public Preview
+
+The same static preview is published at **<https://umrek.github.io/web_dhoch/>**.
+
+- **Purpose:** public visual review of design, navigation and responsive layout before the Django application is validated.
+- **What it is:** static HTML with fictional data. Login, attendance answers, sheet-music downloads, the contact form and administration **do not work**.
+- **What it is not:** this is not the Django application, and Django validation (dependencies, migrations, PostgreSQL tests, Docker, Playwright) **is still pending**.
+- **How it is published:** by [.github/workflows/pages-preview.yml](.github/workflows/pages-preview.yml), on pushes to `main` that change `local_preview/` or `src/static/`, or when started manually.
+  - The published artifact contains only `local_preview/` plus `src/static/{css,js,img}` copied to `static/`.
+  - The workflow fails if any other file type, any hidden file or any broken relative link appears.
+  - Sources, tests, docs and configuration are never published.
 
 ## Quality checks
 

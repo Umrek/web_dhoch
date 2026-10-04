@@ -1,0 +1,63 @@
+name: Pages preview
+
+# Publishes ONLY the static visual preview (local_preview/ + the production CSS/JS/icons
+# from src/static/{css,js,img}) to GitHub Pages. The Django application, sources, tests,
+# docs and configuration are never part of the artifact.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "local_preview/**"
+      - "src/static/**"
+      - ".github/workflows/pages-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Assemble site (preview files only)
+        run: |
+          set -eu
+          mkdir -p _site/static
+          cp -R local_preview/. _site/
+          for d in css js img; do cp -R "src/static/$d" "_site/static/$d"; done
+          # Allow-list check: only static web files, no hidden files.
+          bad=$(find _site -type f ! \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' \) -print; find _site -name '.*' -print)
+          if [ -n "$bad" ]; then echo "::error::unexpected files in Pages artifact:"; echo "$bad"; exit 1; fi
+          # Every relative href/src in the pages must resolve inside the artifact.
+          missing=0
+          for f in _site/*.html; do
+            for ref in $(grep -oE '(href|src)="[^"#:]+' "$f" | sed -E 's/^(href|src)="//'); do
+              [ -f "_site/$ref" ] || { echo "::error file=$f::broken reference $ref"; missing=1; }
+            done
+          done
+          [ "$missing" = 0 ]
+          find _site -type f | sort
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
