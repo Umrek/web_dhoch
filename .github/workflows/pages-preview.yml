@@ -1,11 +1,11 @@
 name: Pages preview
 
-# Publishes ONLY the static visual preview (local_preview/ + the production CSS/JS/icons
-# from src/static/{css,js,img}) to GitHub Pages. The Django application, sources, tests,
-# docs and configuration are never part of the artifact.
+# Publishes ONLY the static visual preview and selected production
+# static assets. The Django application is not deployed by this workflow.
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - "local_preview/**"
       - "src/static/**"
@@ -14,6 +14,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
@@ -21,43 +23,104 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - name: Assemble site (preview files only)
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
+
+      - name: Assemble preview site
+        shell: bash
         run: |
-          set -eu
+          set -euo pipefail
+
           mkdir -p _site/static
           cp -R local_preview/. _site/
-          for d in css js img; do cp -R "src/static/$d" "_site/static/$d"; done
-          # Allow-list check: only static web files, no hidden files.
-          bad=$(find _site -type f ! \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' \) -print; find _site -name '.*' -print)
-          if [ -n "$bad" ]; then echo "::error::unexpected files in Pages artifact:"; echo "$bad"; exit 1; fi
-          # Every relative href/src in the pages must resolve inside the artifact.
-          missing=0
-          for f in _site/*.html; do
-            for ref in $(grep -oE '(href|src)="[^"#:]+' "$f" | sed -E 's/^(href|src)="//'); do
-              [ -f "_site/$ref" ] || { echo "::error file=$f::broken reference $ref"; missing=1; }
-            done
+
+          for directory in css js img; do
+            cp -R "src/static/${directory}" "_site/static/${directory}"
           done
-          [ "$missing" = 0 ]
+
+          touch _site/.nojekyll
+
+          bad_files="$(
+            find _site -type f \
+              ! -name '*.html' \
+              ! -name '*.css' \
+              ! -name '*.js' \
+              ! -name '*.svg' \
+              ! -name '.nojekyll' \
+              -print
+          )"
+
+          unexpected_hidden="$(
+            find _site -name '.*' ! -name '.nojekyll' -print
+          )"
+
+          if [ -n "${bad_files}" ] || [ -n "${unexpected_hidden}" ]; then
+            echo "::error::Unexpected files in Pages artifact"
+            printf '%s\n' "${bad_files}"
+            printf '%s\n' "${unexpected_hidden}"
+            exit 1
+          fi
+
+          missing=0
+
+          for file in _site/*.html; do
+            while IFS= read -r reference; do
+              case "${reference}" in
+                http://*|https://*|mailto:*|tel:*|javascript:*|"")
+                  continue
+                  ;;
+              esac
+
+              clean_reference="${reference%%\?*}"
+              clean_reference="${clean_reference%%#*}"
+              clean_reference="${clean_reference#./}"
+              clean_reference="${clean_reference#/}"
+
+              if [ -n "${clean_reference}" ] && \
+                 [ ! -f "_site/${clean_reference}" ] && \
+                 [ ! -d "_site/${clean_reference}" ]; then
+                echo "::error file=${file}::Broken reference ${reference}"
+                missing=1
+              fi
+            done < <(
+              grep -oE '(href|src)="[^"]+"' "${file}" |
+              sed -E 's/^(href|src)="//; s/"$//' || true
+            )
+          done
+
+          test "${missing}" -eq 0
+
+          echo "Files included in the Pages artifact:"
           find _site -type f | sort
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
           path: _site
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
     permissions:
       pages: write
       id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - id: deployment
+      - name: Deploy GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
