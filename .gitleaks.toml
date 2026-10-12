@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake credentials used only in tests"
+paths = ['''^tests/''']
