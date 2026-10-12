@@ -11,7 +11,7 @@
 | Privilege escalation | Roles come from fixed permission lists. `is_staff` is derived from roles. Musicians get 403 on organizer pages |
 | XSS | Auto-escaping everywhere. Editable content is plain text. CSP without `unsafe-inline` scripts. No inline event handlers |
 | CSRF / clickjacking | Django CSRF middleware. Logout is POST only. `X-Frame-Options: DENY` and `frame-ancestors 'none'` |
-| Malicious uploads | Sheet music: `.pdf` extension, `%PDF-` signature and size limit, random storage names. Photos: decoded by Pillow with a pixel-bomb limit, then re-encoded to JPEG (drops EXIF/GPS and embedded payloads) |
+| Malicious uploads | Sheet music: `.pdf` extension, `%PDF-` signature and size limit, random storage names, and optional ClamAV `clamd` malware scan. Photos: decoded by Pillow with a pixel-bomb limit, then re-encoded to JPEG (drops EXIF/GPS and embedded payloads) |
 | Direct file access | Private storage raises on `.url()`. No `MEDIA_URL`. Files are served only through views that check permissions. PDFs go out with `Content-Disposition: attachment`, `Cache-Control: private, no-store` and `nosniff` |
 | Contact-form spam | Honeypot, signed timestamp (minimum fill time and maximum age), and a per-client rate limit keyed by a salted hash of the client IP |
 | Rate-limit evasion via spoofed `X-Forwarded-For` | Only the hop added by our own trusted proxy (`PROXY_COUNT`) is used |
@@ -52,4 +52,4 @@ Admin actions (status changes, uploads, deletions, purges) are logged by `log_ad
 
 - No two-factor authentication. Admin accounts should use long, unique passwords from a password manager.
 - Rate limiting depends on the shared database cache. It is not a substitute for network-level protection against floods.
-- Uploaded PDFs are checked for type, not scanned for malware. Only trusted staff can upload them.
+- PDF malware scan requires external ClamAV `clamd` and is opt-in (`SHEET_MUSIC_SCAN_ENABLED=true`).

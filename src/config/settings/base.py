@@ -5,7 +5,7 @@ from pathlib import Path
 
 from csp.constants import NONE, SELF
 
-from .env import get_int, get_list, get_str
+from .env import get_bool, get_int, get_list, get_str
 
 SRC_DIR = Path(__file__).resolve().parents[2]
 REPO_DIR = SRC_DIR.parent
@@ -114,6 +114,11 @@ STORAGES = {
 GALLERY_ROOT = Path(get_str("GALLERY_ROOT", str(REPO_DIR / "var" / "gallery")) or "")
 SHEET_MUSIC_ROOT = Path(get_str("SHEET_MUSIC_ROOT", str(REPO_DIR / "var" / "sheet_music")) or "")
 MAX_SHEET_MUSIC_BYTES = get_int("MAX_SHEET_MUSIC_BYTES", 15 * 1024 * 1024)
+SHEET_MUSIC_SCAN_ENABLED = get_bool("SHEET_MUSIC_SCAN_ENABLED", False)
+SHEET_MUSIC_SCAN_FAIL_CLOSED = get_bool("SHEET_MUSIC_SCAN_FAIL_CLOSED", True)
+SHEET_MUSIC_SCAN_TIMEOUT_SECONDS = get_int("SHEET_MUSIC_SCAN_TIMEOUT_SECONDS", 5)
+CLAMAV_HOST = get_str("CLAMAV_HOST", "127.0.0.1") or "127.0.0.1"
+CLAMAV_PORT = get_int("CLAMAV_PORT", 3310)
 MAX_IMAGE_BYTES = get_int("MAX_IMAGE_BYTES", 10 * 1024 * 1024)
 MAX_IMAGE_PIXELS = 50_000_000
 IMAGE_MAX_DIMENSION = 2400
