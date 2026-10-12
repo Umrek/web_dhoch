@@ -72,7 +72,9 @@ def test_service_is_idempotent_for_same_answer(musician, make_event):
 
 def test_note_is_truncated_and_html_is_escaped_on_output(login, musician, organizer, make_event):
     event = make_event()
-    services.respond_to_event(user=musician, event=event, status="ano", note="<script>x</script>" + "a" * 400)
+    services.respond_to_event(
+        user=musician, event=event, status="ano", note="<script>x</script>" + "a" * 400
+    )
     assert len(AttendanceResponse.objects.get().note) == 300
     html = login(organizer).get(reverse("attendance:overview", args=[event.slug])).content.decode()
     assert "<script>x" not in html
@@ -90,7 +92,9 @@ def test_overview_lists_missing_responders(musician, organizer, make_event):
     services.respond_to_event(user=musician, event=event, status="ano")
     overview = event_overview(event)
     assert overview.counts["ano"] == 1
-    assert any(name.startswith("Muzikant") for name in overview.missing)  # the organizer has not answered
+    assert any(
+        name.startswith("Muzikant") for name in overview.missing
+    )  # the organizer has not answered
 
 
 def test_member_list_shows_only_own_response(login, musician, make_user, make_event):

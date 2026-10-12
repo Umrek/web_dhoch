@@ -6,5 +6,7 @@ from .models import AttendanceStatus
 
 
 class ResponseForm(PlainForm):
-    status = forms.ChoiceField(label="Vaše odpověď", choices=AttendanceStatus.choices, widget=forms.RadioSelect)
+    status = forms.ChoiceField(
+        label="Vaše odpověď", choices=AttendanceStatus.choices, widget=forms.RadioSelect
+    )
     note = forms.CharField(label="Poznámka (nepovinné)", max_length=300, required=False)

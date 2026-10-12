@@ -24,7 +24,11 @@ class ContactForm(PlainForm):
         error_messages={"required": "Pro odeslání je nutné vzít zpracování údajů na vědomí."},
     )
     # Honeypot: hidden from people (CSS) and assistive tech (aria-hidden on wrapper).
-    website = forms.CharField(required=False, label="Web", widget=forms.TextInput(attrs={"tabindex": "-1", "autocomplete": "off"}))
+    website = forms.CharField(
+        required=False,
+        label="Web",
+        widget=forms.TextInput(attrs={"tabindex": "-1", "autocomplete": "off"}),
+    )
     token = forms.CharField(required=False, widget=forms.HiddenInput)
 
     is_bot = False
@@ -45,8 +49,11 @@ class ContactForm(PlainForm):
             )
         except signing.BadSignature:
             raise forms.ValidationError(
-                "Platnost formuláře vypršela. Načtěte stránku znovu a zkuste to prosím ještě jednou."
+                "Platnost formuláře vypršela. "
+                "Načtěte stránku znovu a zkuste to prosím ještě jednou."
             ) from None
         if time.time() - issued < settings.CONTACT_MIN_FILL_SECONDS:
-            raise forms.ValidationError("Formulář byl odeslán příliš rychle. Zkuste to prosím znovu.")
+            raise forms.ValidationError(
+                "Formulář byl odeslán příliš rychle. Zkuste to prosím znovu."
+            )
         return cleaned

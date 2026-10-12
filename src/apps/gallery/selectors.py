@@ -11,7 +11,9 @@ def published_albums() -> QuerySet[Album]:
         .prefetch_related(
             Prefetch(
                 "images",
-                queryset=GalleryImage.objects.filter(is_published=True).order_by("position", "created_at"),
+                queryset=GalleryImage.objects.filter(is_published=True).order_by(
+                    "position", "created_at"
+                ),
                 to_attr="visible_images",
             )
         )

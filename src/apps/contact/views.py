@@ -15,7 +15,12 @@ def contact(request: HttpRequest) -> HttpResponse:
                 try:
                     services.check_rate_limit(request)
                 except services.RateLimited:
-                    return render(request, "contact/form.html", {"form": ContactForm(), "rate_limited": True}, status=429)
+                    return render(
+                        request,
+                        "contact/form.html",
+                        {"form": ContactForm(), "rate_limited": True},
+                        status=429,
+                    )
                 services.submit_message(
                     name=form.cleaned_data["name"],
                     email=form.cleaned_data["email"],

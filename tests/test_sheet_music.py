@@ -169,4 +169,7 @@ def test_download_logs_audit_event(login, piece, musician, caplog):
     part = upload(piece, musician)
     with caplog.at_level("INFO", logger="security"):
         login(musician).get(reverse("sheet_music:download", args=[part.pk]))
-    assert any("sheet_music_downloaded" in r.getMessage() or "sheet_music_downloaded" in str(r.__dict__) for r in caplog.records)
+    assert any(
+        "sheet_music_downloaded" in r.getMessage() or "sheet_music_downloaded" in str(r.__dict__)
+        for r in caplog.records
+    )

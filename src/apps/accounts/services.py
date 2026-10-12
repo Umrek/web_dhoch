@@ -58,7 +58,9 @@ def send_invitation(user: "User") -> None:
         body=render_to_string("accounts/email/invitation.txt", context),
         to=[user.email],
     )
-    message.attach_alternative(render_to_string("accounts/email/invitation.html", context), "text/html")
+    message.attach_alternative(
+        render_to_string("accounts/email/invitation.html", context), "text/html"
+    )
     message.send()
     log_admin_event("invitation_sent", user_id=str(user.pk))
 

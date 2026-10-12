@@ -20,7 +20,8 @@ def public_roster() -> list[tuple[str, list[MusicianProfile]]]:
     profiles.sort(key=lambda p: (_ORDER.index(p.section), p.display_name.casefold()))
     labels = dict(InstrumentSection.choices)
     return [
-        (labels[section], list(items)) for section, items in groupby(profiles, key=lambda p: p.section)
+        (labels[section], list(items))
+        for section, items in groupby(profiles, key=lambda p: p.section)
     ]
 
 

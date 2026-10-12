@@ -9,7 +9,9 @@ from apps.content.views import LEGAL_SLUGS
 pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.parametrize("name", ["content:home", "content:about", "events:list", "gallery:list", "contact:form"])
+@pytest.mark.parametrize(
+    "name", ["content:home", "content:about", "events:list", "gallery:list", "contact:form"]
+)
 def test_public_pages_render_in_czech(client, name):
     response = client.get(reverse(name))
     assert response.status_code == 200
@@ -28,7 +30,9 @@ def test_unknown_legal_slug_is_404(client):
 
 
 def test_page_text_is_escaped_not_trusted(client):
-    Page.objects.create(key=PageKey.ABOUT_HISTORY, title="Historie", body="<script>alert(1)</script>")
+    Page.objects.create(
+        key=PageKey.ABOUT_HISTORY, title="Historie", body="<script>alert(1)</script>"
+    )
     html = client.get(reverse("content:about")).content.decode()
     assert "<script>alert(1)</script>" not in html
     assert "&lt;script&gt;" in html
@@ -64,7 +68,13 @@ def test_profile_view_only_edits_own_profile(login, make_user):
     other = make_user(["Muzikant"])
     login(me).post(
         reverse("musicians:profile"),
-        {"display_name": "Nové jméno", "instrument": "", "phone": "", "section": "bici", "user": other.pk},
+        {
+            "display_name": "Nové jméno",
+            "instrument": "",
+            "phone": "",
+            "section": "bici",
+            "user": other.pk,
+        },
     )
     me.musician_profile.refresh_from_db()
     other.musician_profile.refresh_from_db()
@@ -116,9 +126,15 @@ def test_expired_announcements_are_hidden(login, musician):
 
     now = timezone.now()
     Announcement.objects.create(
-        title="Prošlé oznámení", body="x", published_at=now - timedelta(days=5), expires_at=now - timedelta(days=1)
+        title="Prošlé oznámení",
+        body="x",
+        published_at=now - timedelta(days=5),
+        expires_at=now - timedelta(days=1),
     )
-    assert "Prošlé oznámení" not in login(musician).get(reverse("musicians:dashboard")).content.decode()
+    assert (
+        "Prošlé oznámení"
+        not in login(musician).get(reverse("musicians:dashboard")).content.decode()
+    )
 
 
 def test_portal_pages_are_noindex(login, musician):

@@ -41,7 +41,14 @@ class SheetMusicPartAdmin(admin.ModelAdmin):
     list_filter = ("section", "is_current")
     search_fields = ("piece__title",)
     autocomplete_fields = ("piece",)
-    readonly_fields = ("original_name", "size_bytes", "sha256", "version", "uploaded_by", "uploaded_at")
+    readonly_fields = (
+        "original_name",
+        "size_bytes",
+        "sha256",
+        "version",
+        "uploaded_by",
+        "uploaded_at",
+    )
 
     def get_readonly_fields(self, request: HttpRequest, obj: SheetMusicPart | None = None):
         base = tuple(super().get_readonly_fields(request, obj))
@@ -50,7 +57,9 @@ class SheetMusicPartAdmin(admin.ModelAdmin):
         return base
 
     def has_delete_permission(self, request: HttpRequest, obj=None) -> bool:
-        return request.user.is_superuser or request.user.has_perm("sheet_music.delete_sheetmusicpart")
+        return request.user.is_superuser or request.user.has_perm(
+            "sheet_music.delete_sheetmusicpart"
+        )
 
     def save_model(self, request: HttpRequest, obj: SheetMusicPart, form, change: bool) -> None:
         if change:
@@ -59,4 +68,6 @@ class SheetMusicPartAdmin(admin.ModelAdmin):
         try:
             services.register_upload(obj, actor=request.user)
         except services.CopyrightNotConfirmed:
-            self.message_user(request, "Bez potvrzení práv k notám nelze soubor uložit.", messages.ERROR)
+            self.message_user(
+                request, "Bez potvrzení práv k notám nelze soubor uložit.", messages.ERROR
+            )

@@ -11,7 +11,10 @@ class GalleryImageForm(forms.ModelForm):
     upload = forms.FileField(
         label="Fotografie (JPEG, PNG, WebP)",
         required=False,
-        help_text="Metadata (EXIF, GPS) se při nahrání odstraní. Nahrávejte jen fotografie, k nimž máte práva.",
+        help_text=(
+            "Metadata (EXIF, GPS) se při nahrání odstraní. "
+            "Nahrávejte jen fotografie, k nimž máte práva.",
+        ),
     )
 
     class Meta:

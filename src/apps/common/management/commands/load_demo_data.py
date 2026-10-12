@@ -35,7 +35,13 @@ MINIMAL_PDF = (
 # (email, name, section, roles, public)  – all addresses use the reserved .invalid TLD
 PEOPLE = [
     ("admin@demo.invalid", "Demo Administrátor", "kapelnik", [roles.ADMINISTRATOR], True),
-    ("organizator@demo.invalid", "Demo Organizátor", "trubky", [roles.EVENT_ORGANIZER, roles.MUSICIAN], True),
+    (
+        "organizator@demo.invalid",
+        "Demo Organizátor",
+        "trubky",
+        [roles.EVENT_ORGANIZER, roles.MUSICIAN],
+        True,
+    ),
     ("redaktor@demo.invalid", "Demo Redaktor", "klarinety", [roles.CONTENT_EDITOR], False),
     ("muzikant1@demo.invalid", "Demo Muzikant Jedna", "kridlovky", [roles.MUSICIAN], True),
     ("muzikant2@demo.invalid", "Demo Muzikant Dva", "basy", [roles.MUSICIAN], False),
@@ -52,11 +58,15 @@ class Command(BaseCommand):
     help = "Create fictional demo accounts, events, gallery and sheet music (never in production)."
 
     def add_arguments(self, parser) -> None:
-        parser.add_argument("--password", help="Password for all demo accounts (default: random, printed once).")
+        parser.add_argument(
+            "--password", help="Password for all demo accounts (default: random, printed once)."
+        )
 
     def handle(self, *args, **options) -> None:
         if not settings.DEBUG or settings.SETTINGS_MODULE.endswith("production"):
-            raise CommandError("load_demo_data runs only with DEBUG=True and non-production settings.")
+            raise CommandError(
+                "load_demo_data runs only with DEBUG=True and non-production settings."
+            )
         try:
             call_command("sync_roles")
         except ImproperlyConfigured as exc:  # pragma: no cover
@@ -101,16 +111,22 @@ class Command(BaseCommand):
                 },
             )
 
-        Announcement.objects.get_or_create(title="Demo oznámení", defaults={"body": "Fiktivní interní oznámení."})
+        Announcement.objects.get_or_create(
+            title="Demo oznámení", defaults={"body": "Fiktivní interní oznámení."}
+        )
 
         album, _ = Album.objects.get_or_create(
             slug="demo-album", defaults={"title": "Demo album", "is_published": True}
         )
         if not album.images.exists():
-            image = GalleryImage(album=album, alt_text="Ukázková jednobarevná fotografie", is_published=True)
+            image = GalleryImage(
+                album=album, alt_text="Ukázková jednobarevná fotografie", is_published=True
+            )
             store_image(image, process_image(_demo_jpeg()), actor=None)
 
-        piece, _ = Piece.objects.get_or_create(title="Demo polka", defaults={"composer": "Fiktivní skladatel"})
+        piece, _ = Piece.objects.get_or_create(
+            title="Demo polka", defaults={"composer": "Fiktivní skladatel"}
+        )
         if not piece.parts.exists():
             part = SheetMusicPart(
                 piece=piece,

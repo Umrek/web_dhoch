@@ -48,7 +48,9 @@ class SheetMusicPart(models.Model):
         validators=[validate_pdf],
         max_length=200,
     )
-    original_name = models.CharField("původní název souboru", max_length=200, blank=True, editable=False)
+    original_name = models.CharField(
+        "původní název souboru", max_length=200, blank=True, editable=False
+    )
     size_bytes = models.PositiveIntegerField("velikost (B)", default=0, editable=False)
     sha256 = models.CharField("kontrolní součet SHA-256", max_length=64, blank=True, editable=False)
     version = models.PositiveIntegerField("verze", default=1, editable=False)
@@ -56,7 +58,9 @@ class SheetMusicPart(models.Model):
     copyright_confirmed = models.BooleanField(
         "potvrzuji, že mám právo noty sdílet uvnitř kapely",
         default=False,
-        help_text="Noty mohou podléhat autorskému právu. Nahrávejte jen materiály, které smíte sdílet.",
+        help_text=(
+            "Noty mohou podléhat autorskému právu. Nahrávejte jen materiály, které smíte sdílet."
+        ),
     )
     uploaded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,

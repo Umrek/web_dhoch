@@ -45,4 +45,6 @@ class ProfileView(PortalRequiredMixin, View):
             services.update_profile(profile, form)
             messages.success(request, "Profil byl uložen.")
             return redirect("musicians:profile")
-        return render(request, "musicians/profile.html", {"form": form, "profile": profile}, status=400)
+        return render(
+            request, "musicians/profile.html", {"form": form, "profile": profile}, status=400
+        )

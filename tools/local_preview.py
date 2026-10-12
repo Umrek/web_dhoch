@@ -10,7 +10,7 @@ Usage (repository root, Python 3.11+ standard library only):
 Serves exactly two read-only locations, bound to 127.0.0.1 only:
     /                -> local_preview/            (preview HTML, CSS, JS, images)
     /static/...      -> src/static/               (the production CSS/JS/icons, reused unchanged;
-                                                   GitHub Pages gets the same files copied to static/)
+                                           GitHub Pages gets the same files copied to static/)
 Everything else (repository root, .git, .env, sources, tests, media) returns 404.
 """
 

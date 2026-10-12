@@ -45,7 +45,10 @@ class UserAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             sets.insert(
                 1,
-                ("Oprávnění (pouze superuživatel)", {"fields": ("is_superuser", "user_permissions")}),
+                (
+                    "Oprávnění (pouze superuživatel)",
+                    {"fields": ("is_superuser", "user_permissions")},
+                ),
             )
         return sets
 
@@ -64,7 +67,9 @@ class UserAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
     def save_related(self, request: HttpRequest, form, formsets, change: bool) -> None:
-        old_roles = {getattr(g, "pk", g) for g in form.initial.get("groups", [])} if change else set()
+        old_roles = (
+            {getattr(g, "pk", g) for g in form.initial.get("groups", [])} if change else set()
+        )
         super().save_related(request, form, formsets, change)
         user = form.instance
         services.refresh_staff_flag(user)

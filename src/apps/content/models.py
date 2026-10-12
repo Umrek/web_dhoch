@@ -24,7 +24,9 @@ class Page(models.Model):
     key = models.CharField("klíč", max_length=40, choices=PageKey.choices, unique=True)
     title = models.CharField("nadpis", max_length=160)
     intro = models.TextField("úvod", blank=True)
-    body = models.TextField("text", blank=True, help_text="Prostý text; odstavce oddělte prázdným řádkem.")
+    body = models.TextField(
+        "text", blank=True, help_text="Prostý text; odstavce oddělte prázdným řádkem."
+    )
     needs_legal_review = models.BooleanField(
         "vyžaduje právní kontrolu",
         default=False,
@@ -44,7 +46,9 @@ class Page(models.Model):
 class SiteSettings(models.Model):
     """Singleton with public contact details and operator identity (placeholders by default)."""
 
-    band_name = models.CharField("název kapely", max_length=120, default="Dechová hudba Oderské chasy")
+    band_name = models.CharField(
+        "název kapely", max_length=120, default="Dechová hudba Oderské chasy"
+    )
     contact_email = models.EmailField("kontaktní e-mail", blank=True)
     contact_phone = models.CharField("kontaktní telefon", max_length=40, blank=True)
     contact_address = models.TextField("kontaktní adresa", blank=True)
@@ -62,6 +66,9 @@ class SiteSettings(models.Model):
             )
         ]
 
+    def __str__(self) -> str:
+        return "Nastavení webu"
+
     def save(self, *args: object, **kwargs: object) -> None:
         self.pk = 1
         super().save(*args, **kwargs)
@@ -70,9 +77,6 @@ class SiteSettings(models.Model):
     def load(cls) -> "SiteSettings":
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
-
-    def __str__(self) -> str:
-        return "Nastavení webu"
 
 
 class Announcement(models.Model):
@@ -98,7 +102,9 @@ class Announcement(models.Model):
         verbose_name = "interní oznámení"
         verbose_name_plural = "interní oznámení"
         ordering = ["-published_at"]
-        indexes = [models.Index(fields=["is_active", "published_at"], name="content_ann_active_idx")]
+        indexes = [
+            models.Index(fields=["is_active", "published_at"], name="content_ann_active_idx")
+        ]
         constraints = [
             models.CheckConstraint(
                 condition=Q(expires_at__isnull=True) | Q(expires_at__gt=F("published_at")),

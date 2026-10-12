@@ -32,7 +32,12 @@ def test_no_inline_scripts_or_handlers_in_templates():
     for path in root.rglob("*.html"):
         text = path.read_text(encoding="utf-8")
         lowered = text.lower()
-        if "<script>" in lowered or " onclick=" in lowered or " onload=" in lowered or "javascript:" in lowered:
+        if (
+            "<script>" in lowered
+            or " onclick=" in lowered
+            or " onload=" in lowered
+            or "javascript:" in lowered
+        ):
             offenders.append(str(path))
         if "<script" in lowered and "src=" not in lowered:
             offenders.append(str(path))
@@ -49,7 +54,10 @@ def test_all_post_forms_include_csrf_token():
 
 def test_csrf_is_enforced_on_login_and_profile_post(make_user):
     strict = Client(enforce_csrf_checks=True)
-    assert strict.post(reverse("accounts:login"), {"username": "a", "password": "b"}).status_code == 403
+    assert (
+        strict.post(reverse("accounts:login"), {"username": "a", "password": "b"}).status_code
+        == 403
+    )
     user = make_user(["Muzikant"])
     strict.force_login(user)
     assert strict.post(reverse("musicians:profile"), {"display_name": "x"}).status_code == 403
@@ -132,7 +140,7 @@ def run_production(overrides=None, remove=()):
         "import config.settings.production as s;"
         "print(s.SESSION_COOKIE_NAME, s.SECURE_SSL_REDIRECT, s.DEBUG)"
     )
-    return subprocess.run(  # noqa: S603
+    return subprocess.run(
         [sys.executable, "-c", code], cwd=SRC, env=env, capture_output=True, text=True, check=False
     )
 

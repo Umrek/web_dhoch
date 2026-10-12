@@ -12,9 +12,7 @@ class PortalRequiredMixin(LoginRequiredMixin, PermissionRequiredMixin):
     def handle_no_permission(self) -> HttpResponseBase:
         user = self.request.user
         if user.is_authenticated:
-            log_security_event(
-                "portal_access_denied", user_id=str(user.pk), path=self.request.path
-            )
+            log_security_event("portal_access_denied", user_id=str(user.pk), path=self.request.path)
         return super().handle_no_permission()
 
 
@@ -24,7 +22,5 @@ class PermissionDeniedLoggedMixin(LoginRequiredMixin, PermissionRequiredMixin):
     def handle_no_permission(self) -> HttpResponseBase:
         user = self.request.user
         if user.is_authenticated:
-            log_security_event(
-                "permission_denied", user_id=str(user.pk), path=self.request.path
-            )
+            log_security_event("permission_denied", user_id=str(user.pk), path=self.request.path)
         return super().handle_no_permission()

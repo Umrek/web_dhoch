@@ -34,7 +34,9 @@ _ALLOWED: dict[str, set[str]] = {
 
 
 @transaction.atomic
-def change_status(event: Event, new_status: str, *, actor: object, now: datetime | None = None) -> Event:
+def change_status(
+    event: Event, new_status: str, *, actor: object, now: datetime | None = None
+) -> Event:
     locked = Event.objects.select_for_update().get(pk=event.pk)
     if locked.status == new_status:
         return locked

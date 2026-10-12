@@ -16,7 +16,7 @@ from apps.accounts.services import refresh_staff_flag
 from apps.events.models import Event
 from apps.musicians.models import MusicianProfile
 
-PASSWORD = "Spravne-Koleno-Baterie-2026"  # noqa: S105 - test-only value
+PASSWORD = "Spravne-Koleno-Baterie-2026"
 
 MINIMAL_PDF = b"%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n"
 

@@ -35,12 +35,8 @@ class GalleryImage(models.Model):
     album = models.ForeignKey(
         Album, on_delete=models.CASCADE, related_name="images", verbose_name="album"
     )
-    image = models.FileField(
-        "obrázek", storage=gallery_storage, max_length=200, editable=False
-    )
-    thumbnail = models.FileField(
-        "náhled", storage=gallery_storage, max_length=200, editable=False
-    )
+    image = models.FileField("obrázek", storage=gallery_storage, max_length=200, editable=False)
+    thumbnail = models.FileField("náhled", storage=gallery_storage, max_length=200, editable=False)
     width = models.PositiveIntegerField(default=0, editable=False)
     height = models.PositiveIntegerField(default=0, editable=False)
     alt_text = models.CharField(

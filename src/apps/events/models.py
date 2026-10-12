@@ -31,7 +31,9 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("název", max_length=160)
     slug = models.SlugField("adresa (slug)", max_length=100, unique=True)
-    kind = models.CharField("druh", max_length=10, choices=EventKind.choices, default=EventKind.CONCERT)
+    kind = models.CharField(
+        "druh", max_length=10, choices=EventKind.choices, default=EventKind.CONCERT
+    )
     status = models.CharField(
         "stav", max_length=10, choices=EventStatus.choices, default=EventStatus.PLANNED
     )

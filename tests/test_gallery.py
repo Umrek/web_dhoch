@@ -61,7 +61,12 @@ def test_large_images_are_downscaled_and_thumbnail_made(settings):
 
 @pytest.mark.parametrize(
     "data",
-    [b"<svg xmlns='http://www.w3.org/2000/svg'><script>alert(1)</script></svg>", b"GIF89a....", b"not an image", b""],
+    [
+        b"<svg xmlns='http://www.w3.org/2000/svg'><script>alert(1)</script></svg>",
+        b"GIF89a....",
+        b"not an image",
+        b"",
+    ],
 )
 def test_non_images_and_svg_are_rejected(data):
     with pytest.raises(ValidationError):

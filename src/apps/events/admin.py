@@ -42,7 +42,8 @@ class EventAdmin(admin.ModelAdmin):
             title="Potvrdit zrušení akcí",
             description="Zrušené akce zůstanou veřejně viditelné se stavem „Zrušeno“.",
             perform=lambda event: self._safe(
-                request, lambda: services.change_status(event, EventStatus.CANCELLED, actor=request.user)
+                request,
+                lambda: services.change_status(event, EventStatus.CANCELLED, actor=request.user),
             ),
             success_message="Zpracováno akcí: {count}.",
         )
@@ -50,16 +51,25 @@ class EventAdmin(admin.ModelAdmin):
     @admin.action(description="Zveřejnit na webu", permissions=["change"])
     def publish_events(self, request: HttpRequest, queryset: QuerySet) -> None:
         for event in queryset:
-            self._safe(request, lambda event=event: services.set_public(event, public=True, actor=request.user))
+            self._safe(
+                request,
+                lambda event=event: services.set_public(event, public=True, actor=request.user),
+            )
 
     @admin.action(description="Skrýt z veřejného webu", permissions=["change"])
     def unpublish_events(self, request: HttpRequest, queryset: QuerySet) -> None:
         for event in queryset:
-            self._safe(request, lambda event=event: services.set_public(event, public=False, actor=request.user))
+            self._safe(
+                request,
+                lambda event=event: services.set_public(event, public=False, actor=request.user),
+            )
 
     def _change_status(self, request: HttpRequest, queryset: QuerySet, status: str) -> None:
         for event in queryset:
-            self._safe(request, lambda event=event: services.change_status(event, status, actor=request.user))
+            self._safe(
+                request,
+                lambda event=event: services.change_status(event, status, actor=request.user),
+            )
 
     def _safe(self, request: HttpRequest, operation) -> None:
         try:

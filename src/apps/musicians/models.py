@@ -33,7 +33,10 @@ class MusicianProfile(models.Model):
         "změna souhlasu se zveřejněním", null=True, blank=True, editable=False
     )
     phone = models.CharField(
-        "telefon", max_length=20, blank=True, validators=[phone_validator],
+        "telefon",
+        max_length=20,
+        blank=True,
+        validators=[phone_validator],
         help_text="Viditelný jen správcům. Nepovinné.",
     )
     is_active_member = models.BooleanField("aktivní člen", default=True)

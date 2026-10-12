@@ -44,7 +44,9 @@ def test_valid_submission_is_stored_and_emailed(client, settings):
 
 
 def test_header_injection_attempt_is_rejected(client):
-    response = client.post(reverse("contact:form"), payload(email="a@example.test\nBcc: x@example.test"))
+    response = client.post(
+        reverse("contact:form"), payload(email="a@example.test\nBcc: x@example.test")
+    )
     assert response.status_code == 400
     assert ContactMessage.objects.count() == 0
 
@@ -120,7 +122,9 @@ def test_no_ip_address_is_stored():
         (2, "203.0.113.5", "10.0.0.1", "10.0.0.1"),  # too few hops: fall back
     ],
 )
-def test_client_ip_trusts_only_configured_proxies(rf, settings, proxies, forwarded, remote, expected):
+def test_client_ip_trusts_only_configured_proxies(
+    rf, settings, proxies, forwarded, remote, expected
+):
     from apps.contact.services import client_ip
 
     settings.AXES_IPWARE_PROXY_COUNT = proxies

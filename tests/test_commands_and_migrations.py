@@ -42,7 +42,9 @@ def test_demo_data_is_idempotent_and_fictional(settings):
     from apps.sheet_music.models import SheetMusicPart
 
     assert User.objects.count() == 5
-    assert all(email.endswith("@demo.invalid") for email in User.objects.values_list("email", flat=True))
+    assert all(
+        email.endswith("@demo.invalid") for email in User.objects.values_list("email", flat=True)
+    )
     assert Event.objects.filter(slug="demo-zkouska", is_public=False).exists()
     assert GalleryImage.objects.count() == 1
     assert SheetMusicPart.objects.count() == 1
