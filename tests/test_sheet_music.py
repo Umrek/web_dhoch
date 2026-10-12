@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
+from apps.sheet_music import validators as sheet_music_validators
 from apps.sheet_music.models import Piece, SheetMusicPart
 from apps.sheet_music.services import CopyrightNotConfirmed, register_upload
 from apps.sheet_music.validators import validate_pdf
@@ -50,6 +51,40 @@ def test_validator_rejects_oversized(settings):
     settings.MAX_SHEET_MUSIC_BYTES = 10
     with pytest.raises(ValidationError):
         validate_pdf(pdf(content=MINIMAL_PDF))
+
+
+def test_validator_rejects_pdf_when_malware_detected(settings, monkeypatch):
+    settings.SHEET_MUSIC_SCAN_ENABLED = True
+
+    def _scan(_upload):
+        raise sheet_music_validators.MalwareDetectedError("stream: Eicar-Test-Signature FOUND")
+
+    monkeypatch.setattr(sheet_music_validators, "scan_pdf_upload", _scan)
+    with pytest.raises(ValidationError, match="antivirovou kontrolou"):
+        validate_pdf(pdf())
+
+
+def test_validator_rejects_pdf_when_scan_unavailable_and_fail_closed(settings, monkeypatch):
+    settings.SHEET_MUSIC_SCAN_ENABLED = True
+    settings.SHEET_MUSIC_SCAN_FAIL_CLOSED = True
+
+    def _scan(_upload):
+        raise sheet_music_validators.MalwareScanFailedError("scanner unavailable")
+
+    monkeypatch.setattr(sheet_music_validators, "scan_pdf_upload", _scan)
+    with pytest.raises(ValidationError, match="dočasně nedostupná"):
+        validate_pdf(pdf())
+
+
+def test_validator_allows_pdf_when_scan_unavailable_and_fail_open(settings, monkeypatch):
+    settings.SHEET_MUSIC_SCAN_ENABLED = True
+    settings.SHEET_MUSIC_SCAN_FAIL_CLOSED = False
+
+    def _scan(_upload):
+        raise sheet_music_validators.MalwareScanFailedError("scanner unavailable")
+
+    monkeypatch.setattr(sheet_music_validators, "scan_pdf_upload", _scan)
+    validate_pdf(pdf())
 
 
 def test_copyright_confirmation_is_required(piece, musician):

@@ -23,6 +23,7 @@ Copy `.env.example` to `.env` on the server (permissions `600`, never committed)
 | `ADMIN_URL` | A non-obvious admin path, ending with `/` |
 | `PROXY_COUNT` | Number of trusted proxies in front of the app (usually `1`). Used for login lockout and contact rate limiting |
 | `HSTS_SECONDS` | Start with `3600`; raise to `31536000` once HTTPS is confirmed stable |
+| `SHEET_MUSIC_SCAN_ENABLED`, `SHEET_MUSIC_SCAN_FAIL_CLOSED`, `SHEET_MUSIC_SCAN_TIMEOUT_SECONDS`, `CLAMAV_HOST`, `CLAMAV_PORT` | Optional malware scan for uploaded PDFs via external ClamAV `clamd` |
 
 The production settings refuse to start if any critical value is missing or unsafe. Read the error message: it names the setting.
 

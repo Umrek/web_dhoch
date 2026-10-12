@@ -46,6 +46,27 @@ def test_rehearsal_cannot_be_public(make_event):
         make_event(kind="zkouska", is_public=True)
 
 
+def test_rehearsal_constraint_enforced_by_database_on_update(make_event):
+    # Bypasses model validation and services: only the DB CHECK constraint can stop this.
+    from apps.events.models import Event
+
+    rehearsal = make_event(kind="zkouska", is_public=False)
+    with pytest.raises(IntegrityError), transaction.atomic():
+        Event.objects.filter(pk=rehearsal.pk).update(is_public=True)
+    rehearsal.refresh_from_db()
+    assert rehearsal.is_public is False
+
+
+@pytest.mark.parametrize(
+    ("kind", "is_public"),
+    [("zkouska", False), ("koncert", True), ("koncert", False), ("jina", True), ("jina", False)],
+)
+def test_allowed_kind_and_visibility_combinations(make_event, kind, is_public):
+    event = make_event(kind=kind, is_public=is_public)
+    event.full_clean()
+    assert event.pk is not None
+
+
 def test_set_public_service_rejects_rehearsal(make_event, organizer):
     rehearsal = make_event(kind="zkouska", is_public=False)
     with pytest.raises(services.EventNotPublishable):
