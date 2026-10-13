@@ -29,7 +29,32 @@
 
 .preview-states p { margin: 0 0.5rem 0 0; align-self: center; }
 
-.preview-states button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: 0.2em; }
+.preview-states .button-secondary {
+  min-height: 44px;
+  font-size: 1rem;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border-color: var(--color-burgundy);
+}
+
+.preview-states .button-secondary:hover,
+.preview-states .button-secondary:active,
+.preview-states .button-secondary[aria-pressed="true"] {
+  background: var(--color-burgundy-dark);
+  color: var(--color-paper);
+  border-color: var(--color-burgundy-dark);
+}
+
+.preview-states .button-secondary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.preview-states .button-secondary[aria-pressed="true"] {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
 
 .preview-state-label {
   font-size: 0.85rem;
