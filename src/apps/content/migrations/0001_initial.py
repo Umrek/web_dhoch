@@ -15,7 +15,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Page",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 (
                     "key",
                     models.CharField(
@@ -57,23 +62,46 @@ class Migration(migrations.Migration):
                 ),
                 ("updated_at", models.DateTimeField(auto_now=True, verbose_name="upraveno")),
             ],
-            options={"verbose_name": "stránka", "verbose_name_plural": "stránky", "ordering": ["key"]},
+            options={
+                "verbose_name": "stránka",
+                "verbose_name_plural": "stránky",
+                "ordering": ["key"],
+            },
         ),
         migrations.CreateModel(
             name="SiteSettings",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 (
                     "band_name",
                     models.CharField(
-                        default="Dechová hudba Oderské chasy", max_length=120, verbose_name="název kapely"
+                        default="Dechová hudba Oderské chasy",
+                        max_length=120,
+                        verbose_name="název kapely",
                     ),
                 ),
-                ("contact_email", models.EmailField(blank=True, max_length=254, verbose_name="kontaktní e-mail")),
-                ("contact_phone", models.CharField(blank=True, max_length=40, verbose_name="kontaktní telefon")),
+                (
+                    "contact_email",
+                    models.EmailField(blank=True, max_length=254, verbose_name="kontaktní e-mail"),
+                ),
+                (
+                    "contact_phone",
+                    models.CharField(blank=True, max_length=40, verbose_name="kontaktní telefon"),
+                ),
                 ("contact_address", models.TextField(blank=True, verbose_name="kontaktní adresa")),
-                ("operator_name", models.CharField(blank=True, max_length=200, verbose_name="provozovatel")),
-                ("operator_details", models.TextField(blank=True, verbose_name="údaje o provozovateli")),
+                (
+                    "operator_name",
+                    models.CharField(blank=True, max_length=200, verbose_name="provozovatel"),
+                ),
+                (
+                    "operator_details",
+                    models.TextField(blank=True, verbose_name="údaje o provozovateli"),
+                ),
             ],
             options={
                 "verbose_name": "nastavení webu",
@@ -90,14 +118,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Announcement",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("title", models.CharField(max_length=160, verbose_name="nadpis")),
                 ("body", models.TextField(verbose_name="text")),
                 (
                     "published_at",
-                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="zveřejněno od"),
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="zveřejněno od"
+                    ),
                 ),
-                ("expires_at", models.DateTimeField(blank=True, null=True, verbose_name="platí do")),
+                (
+                    "expires_at",
+                    models.DateTimeField(blank=True, null=True, verbose_name="platí do"),
+                ),
                 ("is_active", models.BooleanField(default=True, verbose_name="aktivní")),
                 ("created_at", models.DateTimeField(auto_now_add=True, verbose_name="vytvořeno")),
                 (
@@ -117,10 +155,18 @@ class Migration(migrations.Migration):
                 "verbose_name": "interní oznámení",
                 "verbose_name_plural": "interní oznámení",
                 "ordering": ["-published_at"],
-                "indexes": [models.Index(fields=["is_active", "published_at"], name="content_ann_active_idx")],
+                "indexes": [
+                    models.Index(
+                        fields=["is_active", "published_at"], name="content_ann_active_idx"
+                    )
+                ],
                 "constraints": [
                     models.CheckConstraint(
-                        condition=models.Q(("expires_at__isnull", True), ("expires_at__gt", models.F("published_at")), _connector="OR"),
+                        condition=models.Q(
+                            ("expires_at__isnull", True),
+                            ("expires_at__gt", models.F("published_at")),
+                            _connector="OR",
+                        ),
                         name="content_announcement_expires_after_publish",
                         violation_error_message="Konec platnosti musí být po začátku zveřejnění.",
                     )

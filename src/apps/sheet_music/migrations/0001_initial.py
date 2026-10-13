@@ -30,22 +30,42 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Piece",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("title", models.CharField(max_length=200, verbose_name="název skladby")),
-                ("composer", models.CharField(blank=True, max_length=160, verbose_name="skladatel")),
+                (
+                    "composer",
+                    models.CharField(blank=True, max_length=160, verbose_name="skladatel"),
+                ),
                 ("arranger", models.CharField(blank=True, max_length=160, verbose_name="aranžér")),
                 ("notes", models.TextField(blank=True, verbose_name="interní poznámka")),
                 ("is_archived", models.BooleanField(default=False, verbose_name="archivováno")),
                 ("created_at", models.DateTimeField(auto_now_add=True, verbose_name="vytvořeno")),
                 ("updated_at", models.DateTimeField(auto_now=True, verbose_name="upraveno")),
             ],
-            options={"verbose_name": "skladba", "verbose_name_plural": "skladby", "ordering": ["title"]},
+            options={
+                "verbose_name": "skladba",
+                "verbose_name_plural": "skladby",
+                "ordering": ["title"],
+            },
         ),
         migrations.CreateModel(
             name="SheetMusicPart",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("section", models.CharField(choices=SECTIONS, max_length=12, verbose_name="hlas / sekce")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "section",
+                    models.CharField(choices=SECTIONS, max_length=12, verbose_name="hlas / sekce"),
+                ),
                 (
                     "file",
                     models.FileField(
@@ -58,14 +78,32 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "original_name",
-                    models.CharField(blank=True, editable=False, max_length=200, verbose_name="původní název souboru"),
+                    models.CharField(
+                        blank=True,
+                        editable=False,
+                        max_length=200,
+                        verbose_name="původní název souboru",
+                    ),
                 ),
-                ("size_bytes", models.PositiveIntegerField(default=0, editable=False, verbose_name="velikost (B)")),
+                (
+                    "size_bytes",
+                    models.PositiveIntegerField(
+                        default=0, editable=False, verbose_name="velikost (B)"
+                    ),
+                ),
                 (
                     "sha256",
-                    models.CharField(blank=True, editable=False, max_length=64, verbose_name="kontrolní součet SHA-256"),
+                    models.CharField(
+                        blank=True,
+                        editable=False,
+                        max_length=64,
+                        verbose_name="kontrolní součet SHA-256",
+                    ),
                 ),
-                ("version", models.PositiveIntegerField(default=1, editable=False, verbose_name="verze")),
+                (
+                    "version",
+                    models.PositiveIntegerField(default=1, editable=False, verbose_name="verze"),
+                ),
                 ("is_current", models.BooleanField(default=True, verbose_name="aktuální verze")),
                 (
                     "copyright_confirmed",
@@ -101,7 +139,9 @@ class Migration(migrations.Migration):
                 "verbose_name": "hlas (noty)",
                 "verbose_name_plural": "hlasy (noty)",
                 "ordering": ["piece__title", "section", "-version"],
-                "indexes": [models.Index(fields=["section", "is_current"], name="sheet_music_section_idx")],
+                "indexes": [
+                    models.Index(fields=["section", "is_current"], name="sheet_music_section_idx")
+                ],
                 "constraints": [
                     models.UniqueConstraint(
                         fields=("piece", "section", "version"), name="sheet_music_unique_version"

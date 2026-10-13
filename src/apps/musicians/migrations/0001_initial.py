@@ -13,7 +13,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="MusicianProfile",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("display_name", models.CharField(max_length=120, verbose_name="jméno")),
                 (
                     "section",
@@ -46,7 +51,10 @@ class Migration(migrations.Migration):
                 (
                     "public_listing_changed_at",
                     models.DateTimeField(
-                        blank=True, editable=False, null=True, verbose_name="změna souhlasu se zveřejněním"
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        verbose_name="změna souhlasu se zveřejněním",
                     ),
                 ),
                 (
@@ -64,7 +72,10 @@ class Migration(migrations.Migration):
                         verbose_name="telefon",
                     ),
                 ),
-                ("is_active_member", models.BooleanField(default=True, verbose_name="aktivní člen")),
+                (
+                    "is_active_member",
+                    models.BooleanField(default=True, verbose_name="aktivní člen"),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True, verbose_name="vytvořeno")),
                 ("updated_at", models.DateTimeField(auto_now=True, verbose_name="upraveno")),
                 (
@@ -82,7 +93,9 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "profily muzikantů",
                 "ordering": ["section", "display_name"],
                 "indexes": [
-                    models.Index(fields=["public_listing", "is_active_member"], name="musicians_public_idx")
+                    models.Index(
+                        fields=["public_listing", "is_active_member"], name="musicians_public_idx"
+                    )
                 ],
             },
         ),

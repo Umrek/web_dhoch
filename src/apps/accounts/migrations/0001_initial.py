@@ -57,7 +57,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "date_joined",
-                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="vytvořeno"),
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="vytvořeno"
+                    ),
                 ),
                 (
                     "groups",

@@ -22,11 +22,18 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("title", models.CharField(max_length=160, verbose_name="název")),
-                ("slug", models.SlugField(max_length=100, unique=True, verbose_name="adresa (slug)")),
+                (
+                    "slug",
+                    models.SlugField(max_length=100, unique=True, verbose_name="adresa (slug)"),
+                ),
                 (
                     "kind",
                     models.CharField(
-                        choices=[("koncert", "Koncert"), ("zkouska", "Zkouška"), ("jina", "Jiná akce")],
+                        choices=[
+                            ("koncert", "Koncert"),
+                            ("zkouska", "Zkouška"),
+                            ("jina", "Jiná akce"),
+                        ],
                         default="koncert",
                         max_length=10,
                         verbose_name="druh",
@@ -120,7 +127,10 @@ class Migration(migrations.Migration):
                     models.CheckConstraint(
                         condition=models.Q(
                             ("attendance_deadline__isnull", True),
-                            ("attendance_deadline__lte", django.db.models.expressions.F("starts_at")),
+                            (
+                                "attendance_deadline__lte",
+                                django.db.models.expressions.F("starts_at"),
+                            ),
                             _connector="OR",
                         ),
                         name="events_event_deadline_before_start",

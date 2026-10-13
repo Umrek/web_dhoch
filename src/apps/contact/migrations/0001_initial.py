@@ -10,11 +10,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="ContactMessage",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("name", models.CharField(max_length=120, verbose_name="jméno")),
                 ("email", models.EmailField(max_length=254, verbose_name="e-mail")),
                 ("message", models.TextField(max_length=4000, verbose_name="zpráva")),
-                ("consent_given_at", models.DateTimeField(auto_now_add=True, verbose_name="souhlas se zpracováním")),
+                (
+                    "consent_given_at",
+                    models.DateTimeField(auto_now_add=True, verbose_name="souhlas se zpracováním"),
+                ),
                 ("email_sent", models.BooleanField(default=False, verbose_name="e-mail odeslán")),
                 ("is_handled", models.BooleanField(default=False, verbose_name="vyřízeno")),
                 ("created_at", models.DateTimeField(auto_now_add=True, verbose_name="přijato")),

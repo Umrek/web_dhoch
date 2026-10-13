@@ -16,9 +16,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Album",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
                 ("title", models.CharField(max_length=160, verbose_name="název")),
-                ("slug", models.SlugField(max_length=100, unique=True, verbose_name="adresa (slug)")),
+                (
+                    "slug",
+                    models.SlugField(max_length=100, unique=True, verbose_name="adresa (slug)"),
+                ),
                 ("description", models.TextField(blank=True, verbose_name="popis")),
                 ("happened_on", models.DateField(blank=True, null=True, verbose_name="datum akce")),
                 ("is_published", models.BooleanField(default=False, verbose_name="zveřejněno")),
@@ -34,7 +42,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="GalleryImage",
             fields=[
-                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 (
                     "image",
                     models.FileField(
@@ -93,7 +106,9 @@ class Migration(migrations.Migration):
                 "verbose_name": "fotografie",
                 "verbose_name_plural": "fotografie",
                 "ordering": ["album", "position", "created_at"],
-                "indexes": [models.Index(fields=["album", "is_published"], name="gallery_image_album_idx")],
+                "indexes": [
+                    models.Index(fields=["album", "is_published"], name="gallery_image_album_idx")
+                ],
             },
         ),
     ]
