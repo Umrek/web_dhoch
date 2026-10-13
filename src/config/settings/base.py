@@ -104,16 +104,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STATIC_URL = "static/"
 STATIC_ROOT = REPO_DIR / "staticfiles"
 STATICFILES_DIRS = [SRC_DIR / "static"]
-# ``None`` avoids Django prefixing an empty URL to "/" when the setting is accessed.
-# User uploads are served through authorization-checking views, never Django's media URL.
-MEDIA_URL = None
+# Use a string because Django's live_server parses MEDIA_URL; media is private and served by views.
+MEDIA_URL = ""
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 
 # Files are stored outside any web-served directory and are only delivered by
-# authorization-checking views. There is intentionally no MEDIA_URL.
+# authorization-checking views. There is intentionally no public media URL.
 GALLERY_ROOT = Path(get_str("GALLERY_ROOT", str(REPO_DIR / "var" / "gallery")) or "")
 SHEET_MUSIC_ROOT = Path(get_str("SHEET_MUSIC_ROOT", str(REPO_DIR / "var" / "sheet_music")) or "")
 MAX_SHEET_MUSIC_BYTES = get_int("MAX_SHEET_MUSIC_BYTES", 15 * 1024 * 1024)

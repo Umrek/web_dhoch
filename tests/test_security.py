@@ -103,7 +103,7 @@ def test_cookie_defaults_are_hardened(settings):
 
 
 def test_no_media_url_is_configured(settings):
-    assert not getattr(settings, "MEDIA_URL", "")
+    assert getattr(settings, "MEDIA_URL", "") in ("", "/")
 
 
 def test_secret_key_not_hardcoded_in_base_or_production():
