@@ -79,6 +79,21 @@ The same static preview is published at **<https://umrek.github.io/web_dhoch/>**
 | `uv run bandit -r src -c pyproject.toml` | Static security analysis |
 | `uv run pre-commit run --all-files` | All pre-commit hooks |
 
+## Lokální kontroly před commitem
+
+Hooky nainstalujte jednou:
+
+```sh
+uv run pre-commit install
+uv run pre-commit install --hook-type pre-push
+```
+
+Všechny hooky lze spustit ručně příkazem `uv run pre-commit run --all-files`.
+Gitleaks je potřeba nainstalovat zvlášť; ve Windows použijte `winget install gitleaks`.
+Hooky lze v nouzi obejít přes `git commit --no-verify`, ale CI kontroly spustí znovu.
+E2E testy (Playwright), Docker build, `check --deploy` a testy na PostgreSQL se
+lokálně neprovádějí; běží pouze v CI.
+
 ## Documentation
 
 - [docs/architecture.md](docs/architecture.md) – structure, domains, dependencies

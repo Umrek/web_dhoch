@@ -33,3 +33,27 @@ repos:
         entry: "Refusing to commit secrets or certificates"
         language: fail
         files: (^|/)(\.env(\.(?!example$).+)?|.*\.(pem|key|crt|p12|pfx))$
+      - id: mypy
+        name: mypy
+        entry: uv run mypy src
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: bandit
+        name: bandit
+        entry: uv run bandit -q -r src -c pyproject.toml
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: gitleaks
+        name: gitleaks
+        entry: gitleaks protect --staged --redact -v
+        language: system
+        pass_filenames: false
+      - id: pytest
+        name: pytest (pre-push)
+        entry: uv run pytest -q
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
