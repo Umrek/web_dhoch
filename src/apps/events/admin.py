@@ -1,7 +1,9 @@
 from django.contrib import admin, messages
+from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
+from apps.accounts.models import User
 from apps.common.admin_actions import confirm_action
 
 from . import services
@@ -29,11 +31,14 @@ class EventAdmin(admin.ModelAdmin):
         return super().has_delete_permission(request, obj)
 
     @admin.action(description="Označit jako potvrzené", permissions=["change"])
-    def confirm_events(self, request: HttpRequest, queryset: QuerySet) -> None:
+    def confirm_events(self, request: HttpRequest, queryset: QuerySet[Event]) -> None:
         self._change_status(request, queryset, EventStatus.CONFIRMED)
 
     @admin.action(description="Zrušit vybrané akce", permissions=["change"])
-    def cancel_events(self, request: HttpRequest, queryset: QuerySet):
+    def cancel_events(self, request: HttpRequest, queryset: QuerySet[Event]):
+        if not isinstance(request.user, User):
+            raise PermissionDenied
+        actor = request.user
         return confirm_action(
             self,
             request,
@@ -43,13 +48,13 @@ class EventAdmin(admin.ModelAdmin):
             description="Zrušené akce zůstanou veřejně viditelné se stavem „Zrušeno“.",
             perform=lambda event: self._safe(
                 request,
-                lambda: services.change_status(event, EventStatus.CANCELLED, actor=request.user),
+                lambda: services.change_status(event, EventStatus.CANCELLED, actor=actor),
             ),
             success_message="Zpracováno akcí: {count}.",
         )
 
     @admin.action(description="Zveřejnit na webu", permissions=["change"])
-    def publish_events(self, request: HttpRequest, queryset: QuerySet) -> None:
+    def publish_events(self, request: HttpRequest, queryset: QuerySet[Event]) -> None:
         for event in queryset:
             self._safe(
                 request,
@@ -57,14 +62,14 @@ class EventAdmin(admin.ModelAdmin):
             )
 
     @admin.action(description="Skrýt z veřejného webu", permissions=["change"])
-    def unpublish_events(self, request: HttpRequest, queryset: QuerySet) -> None:
+    def unpublish_events(self, request: HttpRequest, queryset: QuerySet[Event]) -> None:
         for event in queryset:
             self._safe(
                 request,
                 lambda event=event: services.set_public(event, public=False, actor=request.user),
             )
 
-    def _change_status(self, request: HttpRequest, queryset: QuerySet, status: str) -> None:
+    def _change_status(self, request: HttpRequest, queryset: QuerySet[Event], status: str) -> None:
         for event in queryset:
             self._safe(
                 request,

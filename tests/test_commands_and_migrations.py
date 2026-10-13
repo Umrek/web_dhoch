@@ -32,6 +32,13 @@ def test_demo_data_refuses_to_run_without_debug(settings):
         call_command("load_demo_data")
 
 
+def test_demo_data_refuses_to_run_in_production_even_with_debug(settings):
+    settings.DEBUG = True
+    settings.IS_PRODUCTION = True
+    with pytest.raises(CommandError):
+        call_command("load_demo_data")
+
+
 def test_demo_data_is_idempotent_and_fictional(settings):
     settings.DEBUG = True
     call_command("load_demo_data", "--password", "Demo-Heslo-Jen-Pro-Test-1")

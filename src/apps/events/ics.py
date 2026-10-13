@@ -9,9 +9,9 @@ from django.utils import timezone
 from .models import Event, EventStatus
 
 _STATUS = {
-    EventStatus.PLANNED: "TENTATIVE",
-    EventStatus.CONFIRMED: "CONFIRMED",
-    EventStatus.CANCELLED: "CANCELLED",
+    EventStatus.PLANNED.value: "TENTATIVE",
+    EventStatus.CONFIRMED.value: "CONFIRMED",
+    EventStatus.CANCELLED.value: "CANCELLED",
 }
 _CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 

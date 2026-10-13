@@ -7,6 +7,7 @@ from .base import MIDDLEWARE, SITE_URL
 from .env import get_bool, get_int, get_list, get_str, parse_database_url, require_str
 
 DEBUG = False
+IS_PRODUCTION = True
 
 SECRET_KEY = require_str("SECRET_KEY")
 if (
@@ -61,7 +62,7 @@ SECURE_HSTS_PRELOAD = get_bool("HSTS_PRELOAD", False)
 AXES_IPWARE_PROXY_COUNT = get_int("PROXY_COUNT", 1)
 AXES_IPWARE_META_PRECEDENCE_ORDER = ["HTTP_X_FORWARDED_FOR", "REMOTE_ADDR"]
 
-CONTENT_SECURITY_POLICY["DIRECTIVES"]["upgrade-insecure-requests"] = True  # noqa: F405
+CONTENT_SECURITY_POLICY["DIRECTIVES"]["upgrade-insecure-requests"] = []  # noqa: F405
 
 # Static files (WhiteNoise) and shared cache (rate limiting across workers)
 MIDDLEWARE = [MIDDLEWARE[0], "whitenoise.middleware.WhiteNoiseMiddleware", *MIDDLEWARE[1:]]

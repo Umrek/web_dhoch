@@ -39,7 +39,7 @@ class ContactForm(PlainForm):
             self.initial["token"] = issue_token()
 
     def clean(self):
-        cleaned = super().clean()
+        cleaned = super().clean() or {}
         if cleaned.get("website"):
             self.is_bot = True
             return cleaned

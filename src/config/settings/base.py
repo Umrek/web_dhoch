@@ -104,6 +104,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STATIC_URL = "static/"
 STATIC_ROOT = REPO_DIR / "staticfiles"
 STATICFILES_DIRS = [SRC_DIR / "static"]
+# ``None`` avoids Django prefixing an empty URL to "/" when the setting is accessed.
+# User uploads are served through authorization-checking views, never Django's media URL.
+MEDIA_URL = None
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},

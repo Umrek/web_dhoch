@@ -4,20 +4,20 @@ from collections.abc import Callable
 
 from django.contrib import admin, messages
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
-from django.db.models import QuerySet
+from django.db.models import Model, QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.template.response import TemplateResponse
 
 
-def confirm_action(
+def confirm_action[ModelT: Model](
     modeladmin: admin.ModelAdmin,
     request: HttpRequest,
-    queryset: QuerySet,
+    queryset: QuerySet[ModelT],
     *,
     action_name: str,
     title: str,
     description: str,
-    perform: Callable[[object], None],
+    perform: Callable[[ModelT], None],
     success_message: str,
 ) -> HttpResponse | None:
     """Ask for explicit confirmation, then call ``perform(obj)`` for each object."""

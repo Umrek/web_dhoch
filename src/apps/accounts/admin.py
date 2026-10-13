@@ -1,16 +1,18 @@
+from typing import Any
+
+from django import forms
 from django.contrib import admin, messages
-from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
+from apps.accounts.models import User
 from apps.common.admin_actions import confirm_action
 from apps.common.audit import log_admin_event
 
 from . import services
 from .forms import UserCreateForm
 from .roles import STAFF_ROLES  # noqa: F401  (documented dependency of refresh_staff_flag)
-
-User = get_user_model()
 
 
 @admin.register(User)
@@ -29,11 +31,17 @@ class UserAdmin(admin.ModelAdmin):
     def role_list(self, obj: "User") -> str:
         return ", ".join(group.name for group in obj.groups.all())
 
-    def get_form(self, request: HttpRequest, obj: "User | None" = None, **kwargs: object):
+    def get_form(
+        self,
+        request: HttpRequest,
+        obj: Any | None = None,
+        change: bool = False,
+        **kwargs: Any,
+    ) -> type[forms.ModelForm]:
         if obj is None:
             kwargs["form"] = UserCreateForm
             kwargs["fields"] = ("email", "full_name", "groups")
-        return super().get_form(request, obj, **kwargs)
+        return super().get_form(request, obj, change, **kwargs)
 
     def get_fieldsets(self, request: HttpRequest, obj: "User | None" = None):
         if obj is None:
@@ -81,7 +89,7 @@ class UserAdmin(admin.ModelAdmin):
             self.message_user(request, "Pozvánka byla odeslána.", messages.SUCCESS)
 
     @admin.action(description="Odeslat odkaz pro nastavení hesla")
-    def send_invitation_action(self, request: HttpRequest, queryset: QuerySet) -> None:
+    def send_invitation_action(self, request: HttpRequest, queryset: QuerySet[User]) -> None:
         sent = 0
         for user in queryset.filter(is_active=True):
             if user.is_superuser and not request.user.is_superuser:
@@ -91,7 +99,10 @@ class UserAdmin(admin.ModelAdmin):
         self.message_user(request, f"Odesláno odkazů: {sent}.", messages.SUCCESS)
 
     @admin.action(description="Deaktivovat vybrané účty")
-    def deactivate_action(self, request: HttpRequest, queryset: QuerySet):
+    def deactivate_action(self, request: HttpRequest, queryset: QuerySet[User]):
+        if not isinstance(request.user, User):
+            raise PermissionDenied
+        actor = request.user
         queryset = queryset.exclude(pk=request.user.pk)
         if not request.user.is_superuser:
             queryset = queryset.filter(is_superuser=False)
@@ -102,6 +113,6 @@ class UserAdmin(admin.ModelAdmin):
             action_name="deactivate_action",
             title="Potvrdit deaktivaci účtů",
             description="Deaktivované účty se nebudou moci přihlásit.",
-            perform=lambda user: services.set_user_active(user, active=False, actor=request.user),
+            perform=lambda user: services.set_user_active(user, active=False, actor=actor),
             success_message="Deaktivováno účtů: {count}.",
         )

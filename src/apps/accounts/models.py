@@ -1,4 +1,5 @@
 import uuid
+from typing import Any
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -7,7 +8,7 @@ from django.db.models.functions import Lower
 from django.utils import timezone
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     use_in_migrations = True
 
     def _create(self, email: str, password: str | None, **extra: object) -> "User":
@@ -33,7 +34,7 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuživatel musí mít heslo.")
         return self._create(email, password, **extra)
 
-    def get_by_natural_key(self, email: str) -> "User":
+    def get_by_natural_key(self, email: str | None) -> "User":
         return self.get(email__iexact=email)
 
 
@@ -70,7 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             models.UniqueConstraint(Lower("email"), name="accounts_user_email_ci_unique"),
         ]
 
-    def save(self, *args: object, **kwargs: object) -> None:
+    def save(self, *args: Any, **kwargs: Any) -> None:
         self.email = self.email.lower()
         super().save(*args, **kwargs)
 

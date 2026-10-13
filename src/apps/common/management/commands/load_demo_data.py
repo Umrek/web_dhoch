@@ -63,7 +63,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options) -> None:
-        if not settings.DEBUG or settings.SETTINGS_MODULE.endswith("production"):
+        if not settings.DEBUG or getattr(settings, "IS_PRODUCTION", False):
             raise CommandError(
                 "load_demo_data runs only with DEBUG=True and non-production settings."
             )

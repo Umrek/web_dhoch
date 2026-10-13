@@ -1,8 +1,7 @@
 from collections import Counter
 from dataclasses import dataclass
 
-from django.contrib.auth import get_user_model
-
+from apps.accounts.models import User
 from apps.common.choices import InstrumentSection
 from apps.events.models import Event
 from apps.musicians.models import MusicianProfile
@@ -63,4 +62,4 @@ def event_overview(event: Event) -> Overview:
 
 
 def active_user_count() -> int:
-    return get_user_model().objects.filter(is_active=True, musician_profile__isnull=False).count()
+    return User.objects.filter(is_active=True, musician_profile__isnull=False).count()

@@ -11,10 +11,8 @@ class GalleryImageForm(forms.ModelForm):
     upload = forms.FileField(
         label="Fotografie (JPEG, PNG, WebP)",
         required=False,
-        help_text=(
-            "Metadata (EXIF, GPS) se při nahrání odstraní. "
-            "Nahrávejte jen fotografie, k nimž máte práva.",
-        ),
+        help_text="Metadata (EXIF, GPS) se při nahrání odstraní. "
+        "Nahrávejte jen fotografie, k nimž máte práva.",
     )
 
     class Meta:
@@ -22,7 +20,7 @@ class GalleryImageForm(forms.ModelForm):
         fields = ["album", "alt_text", "caption", "position", "is_published"]
 
     def clean(self):
-        cleaned = super().clean()
+        cleaned = super().clean() or {}
         upload = cleaned.get("upload")
         if self.instance._state.adding and not upload:
             self.add_error("upload", "Vyberte soubor s fotografií.")
@@ -53,10 +51,6 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_filter = ("album", "is_published")
     search_fields = ("alt_text", "caption")
     fields = ("album", "upload", "alt_text", "caption", "position", "is_published")
-
-    def get_form(self, request: HttpRequest, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        return form
 
     def save_model(self, request: HttpRequest, obj: GalleryImage, form, change: bool) -> None:
         processed = getattr(form, "processed", None)

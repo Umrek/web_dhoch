@@ -1,5 +1,8 @@
 from django.contrib import admin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
+
+from apps.accounts.models import User
 
 from .models import Announcement, Page, SiteSettings
 
@@ -28,5 +31,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
     def save_model(self, request: HttpRequest, obj: Announcement, form, change: bool) -> None:
         if not change:
+            if not isinstance(request.user, User):
+                raise PermissionDenied
             obj.created_by = request.user
         super().save_model(request, obj, form, change)

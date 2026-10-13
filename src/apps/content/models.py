@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.conf import settings
 from django.db import models
 from django.db.models import F, Q
@@ -69,7 +71,7 @@ class SiteSettings(models.Model):
     def __str__(self) -> str:
         return "Nastavení webu"
 
-    def save(self, *args: object, **kwargs: object) -> None:
+    def save(self, *args: Any, **kwargs: Any) -> None:
         self.pk = 1
         super().save(*args, **kwargs)
 

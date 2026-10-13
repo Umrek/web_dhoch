@@ -1,4 +1,4 @@
-from django.http import FileResponse, Http404, HttpRequest, HttpResponse
+from django.http import FileResponse, Http404, HttpRequest, HttpResponse, HttpResponseBase
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
@@ -19,7 +19,7 @@ def album_detail(request: HttpRequest, slug: str) -> HttpResponse:
 
 
 @require_GET
-def image_file(request: HttpRequest, pk, variant: str) -> HttpResponse:
+def image_file(request: HttpRequest, pk, variant: str) -> HttpResponseBase:
     """Serve a published image through the application (no public storage URL)."""
     image = selectors.public_image(pk)
     if image is None:

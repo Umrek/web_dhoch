@@ -1,7 +1,6 @@
 """Account lifecycle use cases."""
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMultiAlternatives
@@ -11,11 +10,10 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
+from apps.accounts.models import User
 from apps.common.audit import log_admin_event
 
 from .roles import STAFF_ROLES
-
-User = get_user_model()
 
 
 class EmailAlreadyUsed(Exception):

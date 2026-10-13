@@ -51,7 +51,10 @@ class LegalPageView(TemplateView):
 
     def get_context_data(self, **kwargs: object) -> dict[str, object]:
         context = super().get_context_data(**kwargs)
-        key = LEGAL_SLUGS.get(kwargs["slug"])
+        slug = kwargs.get("slug")
+        if not isinstance(slug, str):
+            raise Http404
+        key = LEGAL_SLUGS.get(slug)
         if key is None:
             raise Http404
         context["page"] = selectors.get_page(key)

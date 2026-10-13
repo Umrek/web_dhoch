@@ -10,7 +10,9 @@ DEBUG = False
 SECRET_KEY = "test-only-secret-key-not-used-anywhere-else"  # noqa: S105
 ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
 
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
+DATABASES: dict[str, dict[str, object]] = {
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+}
 # CI sets DATABASE_URL to a throwaway PostgreSQL service so tests also run on the production engine.
 if _test_db_url := get_str("DATABASE_URL", ""):
     DATABASES = {"default": parse_database_url(_test_db_url)}

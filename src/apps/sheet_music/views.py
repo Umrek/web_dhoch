@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.http import FileResponse, Http404, HttpRequest, HttpResponse
+from django.http import FileResponse, Http404, HttpRequest, HttpResponse, HttpResponseBase
 from django.shortcuts import render
 from django.utils.http import urlencode
 from django.views import View
@@ -40,7 +40,7 @@ class PartDownloadView(PortalRequiredMixin, View):
 
     http_method_names = ["get"]
 
-    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+    def get(self, request: HttpRequest, pk: int) -> HttpResponseBase:
         part = selectors.downloadable_part(pk)
         if part is None:
             raise Http404

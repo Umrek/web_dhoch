@@ -1,10 +1,8 @@
 from django import forms
 from django.contrib.auth import forms as auth_forms
-from django.contrib.auth import get_user_model
 
+from apps.accounts.models import User
 from apps.common.forms import AccessibleFormMixin
-
-User = get_user_model()
 
 GENERIC_LOGIN_ERROR = "Zadaný e-mail nebo heslo není správné."
 

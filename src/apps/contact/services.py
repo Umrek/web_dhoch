@@ -3,6 +3,7 @@ import logging
 
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.http import HttpRequest
 
@@ -54,12 +55,15 @@ def check_rate_limit(request: HttpRequest) -> None:
 
 def submit_message(*, name: str, email: str, message: str) -> ContactMessage:
     """Store the message, then notify by e-mail; delivery failure never loses the message."""
+    recipient = settings.CONTACT_RECIPIENT_EMAIL
+    if not recipient:
+        raise ImproperlyConfigured("CONTACT_RECIPIENT_EMAIL must be configured.")
     record = ContactMessage.objects.create(name=name, email=email, message=message)
     mail = EmailMessage(
         subject="Nová zpráva z webu kapely",
         body=f"Od: {name} <{email}>\n\n{message}\n",
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.CONTACT_RECIPIENT_EMAIL],
+        to=[recipient],
         reply_to=[email],
     )
     try:
