@@ -76,3 +76,7 @@ CACHES = {
         "LOCATION": "django_cache",
     }
 }
+SILENCED_SYSTEM_CHECKS = [
+    "security.W005",  # HSTS includeSubDomains: zapnout až po ověření všech subdomén
+    "security.W021",  # HSTS preload: zapnout až po ročním HSTS a ověření
+]
