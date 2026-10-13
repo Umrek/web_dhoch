@@ -7,7 +7,7 @@ from .base import *  # noqa: F403
 from .env import get_str, parse_database_url
 
 DEBUG = False
-SECRET_KEY = "test-only-secret-key-not-used-anywhere-else"  # noqa: S105
+SECRET_KEY = "test-only-secret-key-not-used-anywhere-else"  # noqa: S105  # nosec B105
 ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
 
 DATABASES: dict[str, dict[str, object]] = {

@@ -21,7 +21,8 @@ def get_str(name: str, default: str | None = None, *, required: bool = False) ->
 
 def require_str(name: str) -> str:
     value = get_str(name, required=True)
-    assert value is not None  # noqa: S101 - narrowing for type checkers
+    if value is None:
+        raise ImproperlyConfigured(f"{name} is required")
     return value
 
 
