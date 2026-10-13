@@ -183,7 +183,7 @@ jobs:
           if docker run --rm --entrypoint sh oderske-chasy:ci -c 'command -v gcc || command -v uv'; then
             echo "::error::build tools present in runtime image"; exit 1
           fi
-          docker run --rm --entrypoint sh oderske-chasy:ci -c 'test -z "$(ls -A /data/gallery /data/sheet_music)"'
+          docker run --rm --entrypoint sh oderske-chasy:ci -c 'test -z "$(find /data/gallery /data/sheet_music -mindepth 1)"'
           docker run --rm --entrypoint sh oderske-chasy:ci -c 'test -f /app/staticfiles/staticfiles.json'
           if docker history --no-trunc oderske-chasy:ci | grep -E 'SECRET_KEY=[^"$]'; then
             echo "::error::literal secret in image history"; exit 1
